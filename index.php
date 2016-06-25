@@ -1,16 +1,17 @@
 <?php
 
     include_once 'easepay-lib.php';
-    
+
     $MERCHANT_KEY="XXXXXXXXX";
     $SALT='XXXXXXXXXX';
     $ENV='test';  // uncomment it for test env.(testpay.easebuzz.in)
 //    $ENV='prod'; // uncomment it for production env.(pay.easebuzz.in)
-    
+
     $posted = array();
     if(!empty($_POST)) {
       foreach($_POST as $key => $value) {
         $posted[$key] = htmlentities($value, ENT_QUOTES);
+        $posted[$key] = trim($value);
       }
     }
     $formError = 0;
@@ -27,7 +28,7 @@
               || empty($posted['furl'])
         ) {
             $formError = 1;
-        } 
+        }
 
 
 
