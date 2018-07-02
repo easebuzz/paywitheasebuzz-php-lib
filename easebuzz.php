@@ -2,8 +2,8 @@
     // include file
     include_once('easebuzz-lib/easebuzz_payment_gateway.php');
 
-    $MERCHANT_KEY = ""; // "2PBP7IABZ2" 
-    $SALT = "";         // "DAH88E3UWQ"
+    $MERCHANT_KEY = "";  
+    $SALT = "";         
     $ENV = "";   // setup test enviroment (testpay.easebuzz.in). 
     //$ENV = "prod";   // setup production enviroment (pay.easebuzz.in).
 
@@ -60,8 +60,8 @@
         /*
         * Based on API call change the Merchant key and salt key for testing(initiate payment).
         */
-        $MERCHANT_KEY = "2PBP7IABZ2";
-        $SALT = "DAH88E3UWQ";
+        $MERCHANT_KEY = "XXXXXXXXX";
+        $SALT = "XXXXXXXXX";
         $ENV = "test";
  
         $easebuzzObj = new Easebuzz($MERCHANT_KEY, $SALT, $ENV);
