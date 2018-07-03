@@ -1,11 +1,11 @@
 # paywitheasebuzz-php-lib
 PHP integration kit for pay with easebuzz pay.easebuzz.in
 
-# Requirement Software
+# Software Requirement
 *setup php kits on test/development/production environment install below software*
 
 1. PHP 5.5 or above
-2. php-curl
+2. php-curl (note: php-curl install based on php version).
 3. apache or wamp or xampp server
 
 # easebuzz Documentation for kit integration
