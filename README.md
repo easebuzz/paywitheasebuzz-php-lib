@@ -11,7 +11,7 @@ PHP integration kit for pay with easebuzz pay.easebuzz.in
 # easebuzz Documentation for kit integration
 https://docs.easebuzz.in/
 
-# Process for test paywitheasebuzz-php-lib kit
+# paywitheasebuzz-php-lib kit, try it your self
 
 ### for apache server
 1. clone paywitheasebuzz-php-lib on your's system.
@@ -34,10 +34,10 @@ https://docs.easebuzz.in/
 
 # Process for integrating paywitheasebuzz-php-lib kit in "Project"
 
-1. Copy and Paste easebuzz-lib folder in your's project directory.
-2. Create or Prepare two PHP file in your's project. Which will be called Easebuzz class methods or functions. for example below.
-    1. easebuzz.php
-    2. response.php
+1. copy and paste easebuzz-lib folder in your's project directory.
+2. create or prepare two PHP file in your's project. Which will be called Easebuzz class methods or functions. for example below.
+    1. easebuzz.php (use for calling all methods or function of paywitheasebuzz-php-lib kit)
+    2. response.php (use for handle initiate payment API response)
 3. include easebuzz_payment_gateway.php file in easebuzz.php
     ```
         include_once('easebuzz-lib/easebuzz_payment_gateway.php');
@@ -54,51 +54,84 @@ https://docs.easebuzz.in/
     ```
 6. call Easebuzz class methods and function based on your's requirements.
     1. Initiate Payment API
-        *POST Format*
+        *POST Format and call initiatePaymentAPI*
         ```
-            Array ( [txnid] => T3SAT0B5OL [amount] => 100.0 [firstname] => jitendra [email] => test@gmail.com [phone] => 1231231235 [productinfo] => Laptop [surl] => http://localhost:3000/response.php [furl] => http://localhost:3000/response.php [udf1] => aaaa [udf2] => aa [udf3] => aaaa [udf4] => aaaa [udf5] => aaaa [address1] => aaaa [address2] => aaaa [city] => aaaa [state] => aaaa [country] => aaaa [zipcode] => 123123 )
+            $postData = array ( 
+                "txnid" => "T3SAT0B5OL", 
+                "amount" => "100.0", 
+                "firstname" => "jitendra", 
+                "email" => "test@gmail.com", 
+                "phone" => "1231231235", 
+                "productinfo" => "Laptop", 
+                "surl" => "http://localhost:3000/response.php", 
+                "furl" => "http://localhost:3000/response.php", 
+                "udf1" => "aaaa", 
+                "udf2" => "aaaa", 
+                "udf3" => "aaaa", 
+                "udf4" => "aaaa", 
+                "udf5" => "aaaa", 
+                "address1" => "aaaa", 
+                "address2" => "aaaa", 
+                "city" => "aaaa", 
+                "state" => "aaaa", 
+                "country" => "aaaa", 
+                "zipcode" => "123123" 
+            );
+        
+            $easebuzzObj->initiatePaymentAPI($postData);    
         ```
-        *call initiatePaymentAPI*
-        ```
-            $easebuzzObj->initiatePaymentAPI($_POST);    
-        ```
+
     2. Transaction API
-        *POST Format*
+        *POST Format and call transaction API*
         ```
-            Array ( [txnid] => TZIF0SS24C [amount] => 1.03 [email] => test@gmail.com [phone] => 1231231235 )
+            $postData = array ( 
+                "txnid" => "TZIF0SS24C",
+                "amount" => "1.03",
+                "email" => "test@gmail.com",
+                "phone" => "1231231235"
+            );
+
+            $result = $easebuzzObj->transactionAPI($postData);    
         ```
-        *call transactionAPI*
-        ```
-            $result = $easebuzzObj->transactionAPI($_POST);    
-        ```
+
     3. Transaction API (by date)
-        *POST Format*
+        *POST Format and call transactionDateAPI*
         ```
-            Array ( [merchant_email] => jitendra@gmail.com [transaction_date] => 06-06-2018 )
+            $postData = array( 
+                "merchant_email" => "jitendra@gmail.com",
+                "transaction_date" => "06-06-2018" 
+            );
+
+            $result = $easebuzzObj->transactionDateAPI($postData);
         ```
-        *call transactionDateAPI*
-        ```
-            $result = $easebuzzObj->transactionDateAPI($_POST);
-        ```
+
     4. Refund API
-        *POST Format*
+        *POST Format and call refundAPI*
         ```
-            Array ( [txnid] => ASD20088 [refund_amount] => 1.03 [phone] => 1231231235 [email] => test@gmail.com [amount] => 1.03 )
+            $postData = array( 
+                "txnid" => "ASD20088",
+                "refund_amount" => "1.03",
+                "phone" => "1231231235",
+                "email" => "test@gmail.com",
+                "amount" => "1.03" 
+            );
+
+            $result = $easebuzzObj->refundAPI($postData);    
         ```
-        *call refundAPI*
-        ```
-            $result = $easebuzzObj->refundAPI($_POST);    
-        ```
+
     5. Payout API
-        *POST Format*
+        *POST Format and call payoutAPI*
         ```
-            Array ( [merchant_email] => jitendra@gmail.com [payout_date] => 08-06-2018 )
+            $postData = array( 
+                "merchant_email" => "jitendra@gmail.com",
+                "payout_date" => "08-06-2018" 
+            );
+
+            $result = $easebuzzObj->payoutAPI($postData);
         ```
-        *call payoutAPI*
-        ```
-            $result = $easebuzzObj->payoutAPI($_POST);
-        ```
-    6. Response of Inititate Payment API
+        
+    6. Handel Inititate Payment API response
+    
         * Note:- initiate payment API response will get for success URL or failure URL*
         1. include easebuzz_payment_gateway.php file in response.php
             ```
