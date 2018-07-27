@@ -147,5 +147,33 @@ https://docs.easebuzz.in/
             ```
         4. call Easebuzz class methods or functions
             ```
-                result = $easebuzzObj->easebuzzResponse( $_POST );
+                $result = $easebuzzObj->easebuzzResponse( $_POST );
             ```
+
+    7. # If the server is not supporting to the header():-
+
+        *Note:- Please follow the below steps.*
+        1. Go to the path easebuzz-lib/payment.php
+        2. Open the payment.php file
+        3. Goto the function _paymentResponse($result) and un-comment the below code.
+        ```
+            function _paymentResponse($result){
+
+                if ($result->status === 1){
+                    // first way (comment below line)
+                    // header( 'Location:' . $result->data );
+
+                    // second way (un-comment below code)
+                    echo '
+                      <script>
+                        window.location ='.$result["data"].'
+                      </script>
+                    ';
+
+                    exit(); 
+                }else{
+                    //echo '<h3>'.$result['data'].'</h3>';
+                    print_r(json_encode($result));
+                }
+            }
+        ```

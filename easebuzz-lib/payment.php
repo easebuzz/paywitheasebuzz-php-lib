@@ -626,7 +626,17 @@
     function _paymentResponse($result){
 
         if ($result->status === 1){
+            // first way
             header( 'Location:' . $result->data );
+
+            // second way
+            // echo '
+            //    <script>
+            //           window.location ='.$result["data"].'
+            //    </script>
+            // ';
+
+            exit(); 
         }else{
             //echo '<h3>'.$result['data'].'</h3>';
             print_r(json_encode($result));
