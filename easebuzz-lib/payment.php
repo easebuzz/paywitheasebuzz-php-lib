@@ -631,8 +631,8 @@
 
             // second way
             // echo '
-            //    <script>
-            //           window.location ='.$result["data"].'
+            //    <script type="text/javascript">
+            //           window.location ='.$result->data.'
             //    </script>
             // ';
 
