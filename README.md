@@ -164,11 +164,12 @@ https://docs.easebuzz.in/
                     // header( 'Location:' . $result->data );
 
                     // second way (un-comment below code)
-                    echo '
-                      <script>
-                        window.location ='.$result["data"].'
-                      </script>
-                    ';
+                    echo "
+                       <script type='text/javascript'>
+                              window.location ='".$result->data."'
+                       </script>
+                    ";
+
 
                     exit(); 
                 }else{

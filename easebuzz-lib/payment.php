@@ -630,11 +630,11 @@
             header( 'Location:' . $result->data );
 
             // second way
-            // echo '
-            //    <script type="text/javascript">
-            //           window.location ='.$result->data.'
+            // echo "
+            //    <script type='text/javascript'>
+            //           window.location ='".$result->data."'
             //    </script>
-            // ';
+            // ";
 
             exit(); 
         }else{
