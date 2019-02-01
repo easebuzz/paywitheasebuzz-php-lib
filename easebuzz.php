@@ -2,12 +2,6 @@
     // include file
     include_once('easebuzz-lib/easebuzz_payment_gateway.php');
 
-    $MERCHANT_KEY = "";  
-    $SALT = "";         
-    $ENV = "";   // setup test enviroment (testpay.easebuzz.in). 
-    //$ENV = "prod";   // setup production enviroment (pay.easebuzz.in).
-
-
     /*
     * Create object for call easepay payment gate API and Pass required data into constructor.
     * Get API response.
@@ -33,7 +27,6 @@
     * @return array ApiResponse['status']== 0 error. 
     *
     */
-
     if(!empty($_POST) && (sizeof($_POST) > 0)){
 
         /*
@@ -62,7 +55,8 @@
         */
         $MERCHANT_KEY = "XXXXXXXXX";
         $SALT = "XXXXXXXXX";
-        $ENV = "test";
+        $ENV = "test";    // setup test enviroment (testpay.easebuzz.in). 
+        //$ENV = "prod";   // setup production enviroment (pay.easebuzz.in).
  
         $easebuzzObj = new Easebuzz($MERCHANT_KEY, $SALT, $ENV);
 
@@ -70,7 +64,7 @@
 
             /*  Very Important Notes
             * 
-            * Post Data should be below formate.
+            * Post Data should be below format.
             *
                 Array ( [txnid] => T3SAT0B5OL [amount] => 100.0 [firstname] => jitendra [email] => test@gmail.com [phone] => 1231231235 [productinfo] => Laptop [surl] => http://localhost:3000/response.php [furl] => http://localhost:3000/response.php [udf1] => aaaa [udf2] => aa [udf3] => aaaa [udf4] => aaaa [udf5] => aaaa [address1] => aaaa [address2] => aaaa [city] => aaaa [state] => aaaa [country] => aaaa [zipcode] => 123123 ) 
             */
@@ -80,7 +74,7 @@
 
             /*  Very Important Notes
             * 
-            * Post Data should be below formate.
+            * Post Data should be below format.
             *
                 Array ( [txnid] => TZIF0SS24C [amount] => 1.03 [email] => test@gmail.com [phone] => 1231231235 )
             */
@@ -92,7 +86,7 @@
 
             /*  Very Important Notes
             * 
-            * Post Data should be below formate.
+            * Post Data should be below format.
             *
                 Array ( [merchant_email] => jitendra@gmail.com [transaction_date] => 06-06-2018 )
             */
@@ -104,7 +98,7 @@
             
             /*  Very Important Notes
             * 
-            * Post Data should be below formate.
+            * Post Data should be below format.
             *
                 Array ( [txnid] => ASD20088 [refund_amount] => 1.03 [phone] => 1231231235 [email] => test@gmail.com [amount] => 1.03 )
             */
@@ -116,7 +110,7 @@
 
             /*  Very Important Notes
             * 
-            * Post Data should be below formate.
+            * Post Data should be below format.
             *
                Array ( [merchant_email] => jitendra@gmail.com [payout_date] => 08-06-2018 )
             */

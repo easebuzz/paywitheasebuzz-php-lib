@@ -59,7 +59,7 @@
         *
         * - _emptyValidation(arg1, arg2) :- check empty validation for Mandatory Parameters.
         *
-        * - _email_validation(arg1) :- check email formate validation.
+        * - _email_validation(arg1) :- check email format validation.
         *
         * - _getURL(arg1) :- get URL based on set enviroment.
         *
@@ -130,7 +130,7 @@
         *
         * - _emptyValidation(arg1, arg2) :- check empty validation for Mandatory Parameters.
         *
-        * - _email_validation(arg1) :- check email formate validation.
+        * - _email_validation(arg1) :- check email format validation.
         *
         * - _getURL(arg1) :- get URL based on set enviroment.
         * 
@@ -199,7 +199,7 @@
         *
         * - _emptyValidation(arg1, arg2) :- check empty validation for Mandatory Parameters.
         *
-        * - _email_validation(arg1) :- check email formate validation.
+        * - _email_validation(arg1) :- check email format validation.
         *
         * - _getURL(arg1) :- get URL based on set enviroment.
         * 
@@ -264,7 +264,7 @@
         *
         * - _emptyValidation(arg1, arg2) :- check empty validation for Mandatory Parameters.
         *
-        * - _email_validation(arg1) :- check email formate validation.
+        * - _email_validation(arg1) :- check email format validation.
         *
         * - _getURL(arg1) :- get URL based on set enviroment.
         * 
@@ -329,7 +329,7 @@
         *
         * - _emptyValidation(arg1, arg2) :- check empty validation for Mandatory Parameters.
         *
-        * - _email_validation(arg1) :- check email formate validation.
+        * - _email_validation(arg1) :- check email format validation.
         *
         * - _getURL(arg1) :- get URL based on set enviroment.
         * 

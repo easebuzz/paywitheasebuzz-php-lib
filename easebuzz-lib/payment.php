@@ -344,20 +344,20 @@
 
 
     /*
-    * _email_validation method check email formate validation
+    * _email_validation method check email format validation
     * 
     * param string $email - holds the email address.
     *
     * ##Return values
     *
-    * - return boolean true - email formate is correct.
+    * - return boolean true - email format is correct.
     *
-    * - return array with status and data - email formate is incorrect.
+    * - return array with status and data - email format is incorrect.
     * 
     * @param string $email - holds the email address.
     *
-    * @return boolean true - email formate is correct.
-    * @return array with status and data - email formate is incorrect.
+    * @return boolean true - email format is correct.
+    * @return array with status and data - email format is incorrect.
     * 
     */
     function _email_validation($email){
@@ -495,10 +495,10 @@
     /*
     * _getHashKey method generate Hash key based on the API call (initiatePayment API).
     *
-    * hash formate (hash sequence) :
+    * hash format (hash sequence) :
     *  $hash = key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5|udf6|udf7|udf8|udf9|udf10|salt
     *  
-    * params string $hash_sequence - holds the formate of hash key (sequence).
+    * params string $hash_sequence - holds the format of hash key (sequence).
     * params array $params - holds the passed array.
     * params string $salt - holds merchand salt key.	
     *
@@ -506,7 +506,7 @@
     *
     * - return string $hash - holds the generated hash key.
     *
-    * @params string $hash_sequence - holds the formate of hash key (sequence).
+    * @params string $hash_sequence - holds the format of hash key (sequence).
     * @params array $params - holds the passed array.
     * @params string $salt - holds merchand salt key.
     *
@@ -785,10 +785,12 @@
     /*
     * _getReverseHashKey to generate Reverse hash key for validation
     *
-    * reverse hash formate (hash sequence) :
-    *  $reverse_hash = salt|$response_array['status']|udf10|udf9|udf8|udf7|udf6|udf5|udf4|udf3|udf2|udf1|email|   *                   firstname|productinfo|amount|txnid|key
-    *   
-    * params string $reverse_hash_sequence - holds the formate of reverse hash key (sequence).
+    * reverse hash format (hash sequence) :
+    *  $reverse_hash = salt|status|udf10|udf9|udf8|udf7|udf6|udf5|udf4|udf3|udf2|udf1|email|firstname|productinfo|amount|txnid|key
+    * 
+    * status in $reverse_hash means => it will the response status which is getting from the response. 
+    *
+    * params string $reverse_hash_sequence - holds the format of reverse hash key (sequence).
     * params array $response_array - holds the response array.
     * params string $s_key - holds the merchant salt key.
     *
@@ -796,7 +798,7 @@
     *
     * - return string  $reverse_hash - holds the generated reverse hash key.
     *
-    * @params string $reverse_hash_sequence - holds the formate of reverse hash key (sequence).
+    * @params string $reverse_hash_sequence - holds the format of reverse hash key (sequence).
     * @params array $response_array - holds the response array.
     * @params string $s_key - holds the merchant salt key.
     *

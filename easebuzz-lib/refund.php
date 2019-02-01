@@ -299,20 +299,20 @@
 
 
     /*
-    * _emailValidation method check email formate validation
+    * _emailValidation method check email format validation
     * 
     * param string $email - holds the email address.
     *
     * ##Return values
     *
-    * - return boolean true - email formate is correct.
+    * - return boolean true - email format is correct.
     *
-    * - return array with status and data - email formate is incorrect.
+    * - return array with status and data - email format is incorrect.
     * 
     * @param string $email - holds the email address.
     *
-    * @return boolean true - email formate is correct.
-    * @return array with status and data - email formate is incorrect.
+    * @return boolean true - email format is correct.
+    * @return array with status and data - email format is incorrect.
     * 
     */
     function _emailValidation($email){
@@ -415,10 +415,10 @@
     /*
     * _getHashKey method generate Hash key based on the API call (refund API).
     *
-    * hash formate (hash sequence) :
+    * hash format (hash sequence) :
     *  $hash = key|txnid|amount|refund_amount|email|phone|salt
     *  
-    * params string $hash_sequence - holds the formate of hash key (sequence).
+    * params string $hash_sequence - holds the format of hash key (sequence).
     * params array $params - holds the passed array.
     * params string $salt - holds merchand salt key.	
     *
@@ -426,7 +426,7 @@
     *
     * - return string $hash - holds the generated hash key.
     *
-    * @params string $hash_sequence - holds the formate of hash key (sequence).
+    * @params string $hash_sequence - holds the format of hash key (sequence).
     * @params array $params - holds the passed array.
     * @params string $salt - holds merchand salt key.
     *
