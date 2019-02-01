@@ -141,13 +141,13 @@
     *  _removeSpaceAndPreparePostArray method Remove white space, converts characters to HTML entities 
     *   and prepared the posted array.
     * 
-    * param array $params - holds $_POST array, merchand key and transaction key.
+    * param array $params - holds $_POST array, merchant key and transaction key.
     *
     * ##Return values
     *
     * - return array $temp_array - holds the all posted value after removing space.
     *
-    * @param array $params - holds $_POST array, merchand key and transaction key.
+    * @param array $params - holds $_POST array, merchant key and transaction key.
     * 
     * @return array $temp_array - holds the all posted value after removing space.
     *
@@ -365,7 +365,7 @@
     *  
     * params string $hash_sequence - holds the format of hash key (sequence).
     * params array $params - holds the passed array.
-    * params string $salt - holds merchand salt key.	
+    * params string $salt - holds merchant salt key.	
     *
     * ##Return values
     *
@@ -373,7 +373,7 @@
     *
     * @params string $hash_sequence - holds the format of hash key (sequence).
     * @params array $params - holds the passed array.
-    * @params string $salt - holds merchand salt key.
+    * @params string $salt - holds merchant salt key.
     *
     * @return string $hash - holds the generated hash key.  
     *
