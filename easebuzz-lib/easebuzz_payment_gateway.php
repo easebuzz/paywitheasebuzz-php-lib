@@ -84,17 +84,15 @@
         * --- curl_errno(arg1) :- check there is any error or not in curl execution.
         *
         */
-        public function initiatePaymentAPI($params){
+        public function initiatePaymentAPI($params, $redirect=true){
             // include file
             include_once('payment.php');
 
             // generate transaction ID and push into $params array
             // $txnid = substr(hash('sha256', mt_rand() . microtime()), 0, 20);
             // $params['txnid'] = $txnid;
-
-            initiate_payment($params, $this->MERCHANT_KEY, $this->SALT, $this->ENV);
+            return initiate_payment($params, $redirect, $this->MERCHANT_KEY, $this->SALT, $this->ENV);
         }
-
 
         /*
         * transactionAPI function to query for single transaction

@@ -1,6 +1,5 @@
 <?php
-
-    /*
+/*
     * initiate_payment method initiate payment and call dispay the payment page.
     *
     * param  string $params - holds the $_POST form data.
@@ -20,13 +19,16 @@
     * @return array $result - holds the payment link and status.
     *
     */
-    function initiate_payment($params, $merchant_key, $salt, $env){
-        $result = _payment($params, $merchant_key, $salt, $env);
-        _paymentResponse((object)$result); 
+    function initiate_payment($params, $redirect, $merchant_key, $salt, $env){
+        $result = _payment($params, $redirect, $merchant_key, $salt, $env);
+        if ($redirect) {
+            _paymentResponse((object) $result);
+        } else {
+            return ((object) $result);
+        }
     }
 
-
-    /*
+/*
     * _payment method use for initiate payment.
     * 
     * param string $key - holds the merchant key.
@@ -91,14 +93,14 @@
     * @return integer status = 0 error.
     *
     */
-    function _payment($params, $merchant_key, $salt, $env){
+    function _payment($params, $redirect, $merchant_key, $salt, $env){
 
         $postedArray = '';
         $URL = '';
 
         // argument validation
         $argument_validation = _checkArgumentValidation($params, $merchant_key, $salt, $env);
-        if(is_array($argument_validation) && $argument_validation['status'] === 0){
+        if (is_array($argument_validation) && $argument_validation['status'] === 0) {
             return $argument_validation;
         }
 
@@ -110,42 +112,42 @@
 
         // empty validation
         $empty_validation = _emptyValidation($postedArray, $salt);
-        if(is_array($empty_validation) && $empty_validation['status'] === 0){
+        if (is_array($empty_validation) && $empty_validation['status'] === 0) {
             return $empty_validation;
         }
 
         // check amount should be float or not 
-        if(preg_match("/^([\d]+)\.([\d]?[\d])$/", $postedArray['amount'])){
-            $postedArray['amount'] = (float)$postedArray['amount'];
+        if (preg_match("/^([\d]+)\.([\d]?[\d])$/", $postedArray['amount'])) {
+            $postedArray['amount'] = (float) $postedArray['amount'];
         }
 
         // type validation
         $type_validation = _typeValidation($postedArray, $salt, $env);
-        if($type_validation !== true){
+        if ($type_validation !== true) {
             return $type_validation;
         }
 
         // again amount convert into string
-        $diff_amount_string = abs( strlen($params['amount']) - strlen("".$postedArray['amount']."") );
+        $diff_amount_string = abs(strlen($params['amount']) - strlen("" . $postedArray['amount'] . ""));
         $diff_amount_string = ($diff_amount_string === 2) ? 1 : 2;
-        $postedArray['amount'] = sprintf("%.".$diff_amount_string."f", $postedArray['amount']);
+        $postedArray['amount'] = sprintf("%." . $diff_amount_string . "f", $postedArray['amount']);
 
         // email validation
         $email_validation = _email_validation($postedArray['email']);
-        if($email_validation !== true)
+        if ($email_validation !== true)
             return $email_validation;
 
         // get URL based on enviroment like ($env = 'test' or $env = 'prod')
         $URL = _getURL($env);
 
         // process to start pay
-        $pay_result = _pay($postedArray, $salt, $URL);
-        
-        return $pay_result;        
+        $pay_result = _pay($postedArray, $redirect, $salt, $URL);
+
+        return $pay_result;
     }
 
 
-    /*
+/*
     *  _checkArgumentValidation method Check number of Arguments Validation. Means how many arguments submitted 
     *  from form and verify with 
     * API documentation.
@@ -171,7 +173,7 @@
     function _checkArgumentValidation($params, $merchant_key, $salt, $env){
         $args = func_get_args();
         $argsc = count($args);
-        if($argsc !== 4){
+        if ($argsc !== 4) {
             return array(
                 'status' => 0,
                 'data' => 'Invalid number of arguments.'
@@ -179,9 +181,9 @@
         }
         return 1;
     }
- 
 
-    /*  
+
+/*  
     *  _removeSpaceAndPreparePostArray method Remove white space, converts characters to HTML entities 
     *   and prepared the posted array.
     * 
@@ -198,32 +200,32 @@
     */
     function _removeSpaceAndPreparePostArray($params){
         $temp_array = array(
-            'key' => trim( htmlentities($params['key'], ENT_QUOTES) ),
-            'txnid' => trim( htmlentities($params['txnid'], ENT_QUOTES) ),
-            'amount' => trim( htmlentities($params['amount'], ENT_QUOTES) ),
-            'firstname' => trim( htmlentities($params['firstname'], ENT_QUOTES) ),
-            'email' => trim( htmlentities($params['email'], ENT_QUOTES) ),
-            'phone' => trim( htmlentities($params['phone'], ENT_QUOTES) ),
-            'udf1' => trim( htmlentities($params['udf1'], ENT_QUOTES) ),
-            'udf2' => trim( htmlentities($params['udf2'], ENT_QUOTES) ),
-            'udf3' => trim( htmlentities($params['udf3'], ENT_QUOTES) ),
-            'udf4' => trim( htmlentities($params['udf4'], ENT_QUOTES) ),
-            'udf5' => trim( htmlentities($params['udf5'], ENT_QUOTES) ),
-            'productinfo' =>trim( htmlentities($params['productinfo'], ENT_QUOTES) ),
-            'surl' => trim( htmlentities($params['surl'], ENT_QUOTES) ),
-            'furl' => trim( htmlentities($params['furl'], ENT_QUOTES) ),
-            'address1' => trim( htmlentities($params['address1'], ENT_QUOTES) ),
-            'address2' => trim( htmlentities($params['address2'], ENT_QUOTES) ),
-            'city' => trim( htmlentities($params['city'], ENT_QUOTES) ),
-            'state' => trim( htmlentities($params['state'], ENT_QUOTES) ),
-            'country' => trim( htmlentities($params['country'], ENT_QUOTES) ),
-            'zipcode' => trim( htmlentities($params['zipcode'], ENT_QUOTES) )
+            'key' => trim(htmlentities($params['key'], ENT_QUOTES)),
+            'txnid' => trim(htmlentities($params['txnid'], ENT_QUOTES)),
+            'amount' => trim(htmlentities($params['amount'], ENT_QUOTES)),
+            'firstname' => trim(htmlentities($params['firstname'], ENT_QUOTES)),
+            'email' => trim(htmlentities($params['email'], ENT_QUOTES)),
+            'phone' => trim(htmlentities($params['phone'], ENT_QUOTES)),
+            'udf1' => trim(htmlentities($params['udf1'], ENT_QUOTES)),
+            'udf2' => trim(htmlentities($params['udf2'], ENT_QUOTES)),
+            'udf3' => trim(htmlentities($params['udf3'], ENT_QUOTES)),
+            'udf4' => trim(htmlentities($params['udf4'], ENT_QUOTES)),
+            'udf5' => trim(htmlentities($params['udf5'], ENT_QUOTES)),
+            'productinfo' => trim(htmlentities($params['productinfo'], ENT_QUOTES)),
+            'surl' => trim(htmlentities($params['surl'], ENT_QUOTES)),
+            'furl' => trim(htmlentities($params['furl'], ENT_QUOTES)),
+            'address1' => trim(htmlentities($params['address1'], ENT_QUOTES)),
+            'address2' => trim(htmlentities($params['address2'], ENT_QUOTES)),
+            'city' => trim(htmlentities($params['city'], ENT_QUOTES)),
+            'state' => trim(htmlentities($params['state'], ENT_QUOTES)),
+            'country' => trim(htmlentities($params['country'], ENT_QUOTES)),
+            'zipcode' => trim(htmlentities($params['zipcode'], ENT_QUOTES))
         );
         return $temp_array;
     }
 
 
-    /*
+/*
     * _emptyValidation method check empty validation for Mandatory Parameters.
     *
     * param  array $params - holds the all $_POST data
@@ -246,47 +248,47 @@
     */
     function _emptyValidation($params, $salt){
         $empty_value = false;
-        if(empty($params['key'])) 
+        if (empty($params['key']))
             $empty_value = 'Merchant Key';
 
-        if(empty($params['txnid'])) 
+        if (empty($params['txnid']))
             $empty_value = 'Transaction ID';
 
-        if(empty($params['amount'])) 
+        if (empty($params['amount']))
             $empty_value = 'Amount';
-            
-        if(empty($params['firstname'])) 
+
+        if (empty($params['firstname']))
             $empty_value = 'First Name';
 
-        if(empty($params['email'])) 
-            $empty_value ='Email';
+        if (empty($params['email']))
+            $empty_value = 'Email';
 
-        if(empty($params['phone'])) 
+        if (empty($params['phone']))
             $empty_value = 'Phone';
 
-        if(empty($params['productinfo'])) 
-            $empty_value ='Product Infomation';
-            
-        if(empty($params['surl'])) 
-            $empty_value ='Success URL';
-        
-        if(empty($params['furl'])) 
-            $empty_value ='Failure URL';
+        if (empty($params['productinfo']))
+            $empty_value = 'Product Infomation';
 
-        if(empty($salt))
+        if (empty($params['surl']))
+            $empty_value = 'Success URL';
+
+        if (empty($params['furl']))
+            $empty_value = 'Failure URL';
+
+        if (empty($salt))
             $empty_value = 'Merchant Salt Key';
 
-        if($empty_value !== false){
+        if ($empty_value !== false) {
             return array(
                 'status' => 0,
-                'data' => 'Mandatory Parameter '.$empty_value.' can not empty'
+                'data' => 'Mandatory Parameter ' . $empty_value . ' can not empty'
             );
         }
         return true;
     }
 
 
-    /*
+/*
     * _typeValidation method check type validation for field.
     *
     * param  array $params - holds the all $_POST data.
@@ -309,31 +311,31 @@
     */
     function _typeValidation($params, $salt, $env){
         $type_value = false;
-        if(!is_string($params['key']))
+        if (!is_string($params['key']))
             $type_value = "Merchant Key should be string";
 
-        if(!is_float($params['amount']))
+        if (!is_float($params['amount']))
             $type_value = "The amount should float up to two or one decimal.";
 
-        if(!is_string($params['productinfo']))
+        if (!is_string($params['productinfo']))
             $type_value =  "Product Information should be string";
 
-        if(!is_string($params['firstname']))
+        if (!is_string($params['firstname']))
             $type_value =  "First Name should be string";
-        
-        if(!is_string($params['phone']))
+
+        if (!is_string($params['phone']))
             $type_value = "Phone Number should be number";
 
-        if(!is_string($params['email']))
+        if (!is_string($params['email']))
             $type_value = "Email should be string";
 
-        if(!is_string($params['surl']))
+        if (!is_string($params['surl']))
             $type_value = "Success URL should be string";
-        
-        if(!is_string($params['furl']))
+
+        if (!is_string($params['furl']))
             $type_value = "Failure URL should be string";
 
-        if($type_value !== false){
+        if ($type_value !== false) {
             return array(
                 'status' => 0,
                 'data' => $type_value
@@ -343,7 +345,7 @@
     }
 
 
-    /*
+/*
     * _email_validation method check email format validation
     * 
     * param string $email - holds the email address.
@@ -362,7 +364,7 @@
     */
     function _email_validation($email){
         $email_regx = "/^([\w\.-]+)@([\w-]+)\.([\w]{2,8})(\.[\w]{2,8})?$/";
-        if(!preg_match($email_regx, $email)){
+        if (!preg_match($email_regx, $email)) {
             return array(
                 'status' => 0,
                 'data' => 'Email invalid, Please enter valid email.'
@@ -372,7 +374,7 @@
     }
 
 
-    /*
+/*
     * _getURL method set based on enviroment ($env = 'test' or $env = 'prod') and 
     * generate url link.
     *   
@@ -389,21 +391,27 @@
     */
     function _getURL($env){
         $url_link = '';
-        switch($env){
-            case 'test' :
+        switch ($env) {
+            case 'test':
                 $url_link = "https://testpay.easebuzz.in/";
                 break;
-            case 'prod' :
+            case 'prod':
                 $url_link = 'https://pay.easebuzz.in/';
                 break;
-            default :
+            case 'local':
+                $url_link = 'http://localhost:8005/';
+                break;
+            case 'dev':
+                $url_link = 'https://devpay.easebuzz.in/';
+                break;
+            default:
                 $url_link = "https://testpay.easebuzz.in/";
         }
         return $url_link;
     }
 
 
-    /*
+/*
     * _pay method initiate payment will be start from here.
     *
     * params array $params_array - holds all form data with merchant key, transaction id etc.
@@ -471,7 +479,7 @@
     * @return integer status = 1 means success and go the url link.  
     *   
     */
-    function _pay($params_array, $salt_key, $url){
+    function _pay($params_array, $redirect, $salt_key, $url){
         $hash_key = '';
 
         // generate hash key and push into params array.
@@ -479,20 +487,24 @@
         $params_array['hash'] = $hash_key;
 
         // call curl_call() for initiate pay link
-        $curl_result = _curlCall( $url.'payment/initiateLink', http_build_query($params_array) );
-        
+        $curl_result = _curlCall($url . 'payment/initiateLink', http_build_query($params_array));
+
         $accesskey = ($curl_result->status === 1) ? $curl_result->data : null;
 
-        if( empty($accesskey) ){
-           return $curl_result;
-        }else{
-            $curl_result->data = $url.'pay/'.$accesskey;
+        if (empty($accesskey)) {
+            return $curl_result;
+        } else {
+            if ($redirect == true) {
+                $curl_result->data = $url . 'pay/' . $accesskey;
+            } else {
+                $curl_result->data = $accesskey;
+            }
             return $curl_result;
         }
     }
 
 
-    /*
+/*
     * _getHashKey method generate Hash key based on the API call (initiatePayment API).
     *
     * hash format (hash sequence) :
@@ -517,11 +529,11 @@
         $hash_sequence = "key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5|udf6|udf7|udf8|udf9|udf10";
 
         // make an array or split into array base on pipe sign.
-        $hash_sequence_array = explode( '|', $hash_sequence );
+        $hash_sequence_array = explode('|', $hash_sequence);
         $hash = null;
 
         // prepare a string based on hash sequence from the $params array.
-        foreach($hash_sequence_array as $value ) {
+        foreach ($hash_sequence_array as $value) {
             $hash .= isset($posted[$value]) ? $posted[$value] : '';
             $hash .= '|';
         }
@@ -529,11 +541,11 @@
         $hash .= $salt_key;
 
         // generate hash key using hash function(predefine) and return
-        return strtolower( hash('sha512', $hash) );
+        return strtolower(hash('sha512', $hash));
     }
 
 
-    /*
+/*
     *  _curlCall method call CURL for initialized payment link.
     *
     * params string $url - holds the payment URL which will be redirect to.
@@ -571,30 +583,30 @@
         $cURL = curl_init();
 
         // Set multiple options for a cURL transfer.
-        curl_setopt_array( 
-            $cURL, 
-            array ( 
-                CURLOPT_URL => $url, 
-                CURLOPT_POSTFIELDS => $params_array, 
-                CURLOPT_POST => true, 
-                CURLOPT_RETURNTRANSFER => true, 
-                CURLOPT_USERAGENT => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36', 
-                CURLOPT_SSL_VERIFYHOST => 0, 
-                CURLOPT_SSL_VERIFYPEER => 0 
-            ) 
+        curl_setopt_array(
+            $cURL,
+            array(
+                CURLOPT_URL => $url,
+                CURLOPT_POSTFIELDS => $params_array,
+                CURLOPT_POST => true,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_USERAGENT => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36',
+                CURLOPT_SSL_VERIFYHOST => 0,
+                CURLOPT_SSL_VERIFYPEER => 0
+            )
         );
 
         // Perform a cURL session
         $result = curl_exec($cURL);
 
         // check there is any error or not in curl execution.
-        if( curl_errno($cURL) ){
+        if (curl_errno($cURL)) {
             $cURL_error = curl_error($cURL);
-            if( empty($cURL_error) )
+            if (empty($cURL_error))
                 $cURL_error = 'Server Error';
-            
+
             return array(
-                'curl_status' => 0, 
+                'curl_status' => 0,
                 'error' => $cURL_error
             );
         }
@@ -604,9 +616,9 @@
 
         return $result_response;
     }
-    
-    
-    /*
+
+
+/*
     * _paymentResponse method show response after API call.
     *
     * params array $params_array - holds the passed array.
@@ -625,9 +637,9 @@
     */
     function _paymentResponse($result){
 
-        if ($result->status === 1){
+        if ($result->status === 1) {
             // first way
-            header( 'Location:' . $result->data );
+            header('Location:' . $result->data);
 
             // second way
             // echo "
@@ -636,15 +648,15 @@
             //    </script>
             // ";
 
-            exit(); 
-        }else{
+            exit();
+        } else {
             //echo '<h3>'.$result['data'].'</h3>';
             print_r(json_encode($result));
         }
     }
 
 
-    /*
+/*
     * response method verify API response is acceptable or not and returns the response object.
     *  
     * params array $response_params - holds the response array.
@@ -669,7 +681,7 @@
     function response($response_params, $salt_key){
 
         // check return response params is array or not
-        if(!is_array($response_params) || count($response_params) === 0 ){
+        if (!is_array($response_params) || count($response_params) === 0) {
             return array(
                 'status' => 0,
                 'data' => 'Response params is empty.'
@@ -681,12 +693,12 @@
 
         // empty validation 
         $empty_validation = _emptyValidation($easebuzzPaymentResponse, $salt_key);
-        if(is_array($empty_validation) && $empty_validation['status'] === 0){
+        if (is_array($empty_validation) && $empty_validation['status'] === 0) {
             return $empty_validation;
         }
 
         // empty validation for response params status
-        if( empty($easebuzzPaymentResponse['status']) ){
+        if (empty($easebuzzPaymentResponse['status'])) {
             return array(
                 'status' => 0,
                 'data' => 'Response status is empty.'
@@ -700,7 +712,7 @@
     }
 
 
-    /*
+/*
     *  _removeSpaceAndPrepareAPIResponseArray method Remove white space, converts characters to HTML entities 
     *   and prepared the posted array.
     * 
@@ -717,14 +729,14 @@
     */
     function _removeSpaceAndPrepareAPIResponseArray($response_array){
         $temp_array = array();
-        foreach( $response_array as $key => $value ){
-            $temp_array[$key] = trim( htmlentities($value, ENT_QUOTES) );
+        foreach ($response_array as $key => $value) {
+            $temp_array[$key] = trim(htmlentities($value, ENT_QUOTES));
         }
         return $temp_array;
     }
 
 
-    /*
+/*
     * _getResponse check response is correct or not.
     *
     * param array $response_array - holds the API response array.
@@ -747,33 +759,33 @@
     *
     */
     function _getResponse($response_array, $s_key){
-       
+
         // reverse hash key for validation means response is correct or not.
         $reverse_hash_key = _getReverseHashKey($response_array, $s_key);
 
-        if($reverse_hash_key === $response_array['hash']){
+        if ($reverse_hash_key === $response_array['hash']) {
             switch ($response_array['status']) {
-                case 'success' :
+                case 'success':
                     return array(
                         'status' => 1,
                         'url' => $response_array['surl'],
                         'data' => $response_array
                     );
                     break;
-                case 'failure' :
+                case 'failure':
                     return array(
                         'status' => 1,
                         'url' => $response_array['furl'],
                         'data' => $response_array
                     );
                     break;
-                default :
+                default:
                     return array(
                         'status' => 1,
                         'data' => $response_array
                     );
             }
-        }else{
+        } else {
             return array(
                 'status' => 0,
                 'data' => 'Hash key Mismatch'
@@ -782,7 +794,7 @@
     }
 
 
-    /*
+/*
     * _getReverseHashKey to generate Reverse hash key for validation
     *
     * reverse hash format (hash sequence) :
@@ -810,19 +822,15 @@
 
         // make an array or split into array base on pipe sign.
         $reverse_hash = "";
-        $reverse_hash_sequence_array = explode( '|', $reverse_hash_sequence );
-        $reverse_hash .= $s_key. '|' . $response_array['status'];
+        $reverse_hash_sequence_array = explode('|', $reverse_hash_sequence);
+        $reverse_hash .= $s_key . '|' . $response_array['status'];
 
         // prepare a string based on reverse hash sequence from the $response_array array.
-        foreach($reverse_hash_sequence_array as $value ) {
+        foreach ($reverse_hash_sequence_array as $value) {
             $reverse_hash .= '|';
             $reverse_hash .= isset($response_array[$value]) ? $response_array[$value] : '';
         }
 
         // generate reverse hash key using hash function(predefine) and return
-        return strtolower( hash('sha512', $reverse_hash) );        
+        return strtolower(hash('sha512', $reverse_hash));
     }
-
-?>
-
-
