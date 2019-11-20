@@ -80,11 +80,18 @@ https://docs.easebuzz.in/
         
             $easebuzzObj->initiatePaymentAPI($postData);    
         ```
-        # Advanced Parameter:
-        a. "sub_merchant_id": Mandatory parameter if you are using sub-aggregator feature otherwise not mandatory.Here Pass sub-aggregator id.You can create sub aggregator from Easebuzz dashboard web portal.",
-        b. "unique_id":  Mandatory parameter if you are using customer save card feature otherwise not mandatory. This is customer’s unique id. You need to enable save card feature from the Easebuzz dashboard web portal.,
-        c. "split_payments" : Mandatory parameter if you are using split payment feature otherwise not mandatory.You need to pass here payment slots in JSON format like {"label_HDFC": 100,"label_icici":100}, Please use label provided by Easebuzz team.".,
+        ## Advanced Parameter:
+        * "sub_merchant_id" : -
+              Mandatory parameter if you are using sub-aggregator feature otherwise not mandatory.Here Pass sub-aggregator id.You can create sub aggregator from Easebuzz dashboard web portal."
+              
+        * "unique_id" : -
+            Mandatory parameter if you are using customer save card feature otherwise not mandatory. This is customer’s unique id. You need to enable save card feature from the Easebuzz dashboard web portal.
+        
+        * "split_payments" : -
+             Mandatory parameter if you are using split payment feature otherwise not mandatory.You need to pass here payment slots in JSON format like {"label_HDFC": 100,"label_icici":100}, Please use label provided by Easebuzz team.
+            ```
                e.g. "split_payments" => { "axisaccount" : 100, "hdfcaccount" : 100}
+             ```  
 
     2. Transaction API
         *POST Format and call transaction API*
