@@ -53,15 +53,17 @@
         /*
         * Based on API call change the Merchant key and salt key for testing(initiate payment).
         */
-        $MERCHANT_KEY = "XXXXXXXXX";
-        $SALT = "XXXXXXXXX";
-        $ENV = "test";    // setup test enviroment (testpay.easebuzz.in). 
-        //$ENV = "prod";   // setup production enviroment (pay.easebuzz.in).
+        $MERCHANT_KEY = "N89RDXN7JT";
+        $SALT = "9M0AFW7HAQ";
+       // $ENV = "dev";    // setup test enviroment (testpay.easebuzz.in).
+        $ENV = "prod";   // setup production enviroment (pay.easebuzz.in).
  
         $easebuzzObj = new Easebuzz($MERCHANT_KEY, $SALT, $ENV);
 
-        if($apiname === "initiate_payment"){ 
+        if($apiname === "initiate_payment"){
 
+          //  print_r($_POST);
+           // dump();
             /*  Very Important Notes
             * 
             * Post Data should be below format.

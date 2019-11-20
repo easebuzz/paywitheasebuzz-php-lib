@@ -17,6 +17,7 @@
         * @param  string $env - holds the env(enviroment). 
         *
         */
+
         function __construct($key, $salt, $env){
             $this->MERCHANT_KEY = $key;
             $this->SALT = $salt;

@@ -221,6 +221,16 @@
             'country' => trim(htmlentities($params['country'], ENT_QUOTES)),
             'zipcode' => trim(htmlentities($params['zipcode'], ENT_QUOTES))
         );
+
+        if (array_key_exists("sub_merchant_id", $params)  and !empty($params['sub_merchant_id']) )
+            $temp_array['sub_merchant_id'] = trim( htmlentities($params['sub_merchant_id'], ENT_QUOTES) );
+
+        if (array_key_exists("unique_id", $params)  and  !empty($params['unique_id']) )
+            $temp_array['unique_id'] = trim( htmlentities($params['unique_id'], ENT_QUOTES) );
+
+        if (array_key_exists("split_payments", $params)  and  !empty($params['split_payments']) )
+            $temp_array['split_payments'] = trim($params['split_payments']);
+        // print_r($temp_array);
         return $temp_array;
     }
 
