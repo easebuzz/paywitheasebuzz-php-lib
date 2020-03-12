@@ -162,7 +162,7 @@ https://docs.easebuzz.in/
                 $result = $easebuzzObj->easebuzzResponse( $_POST );
             ```
 
-    7. # If the server is not supporting to the header():-
+    7. # If the server is not supporting the header():-
 
         *Note:- Please follow the below steps.*
         1. Go to the path easebuzz-lib/payment.php
