@@ -21,9 +21,12 @@
     */
     function initiate_payment($params, $redirect, $merchant_key, $salt, $env){
         $result = _payment($params, $redirect, $merchant_key, $salt, $env);
+        #print_r($result);
         if ($redirect) {
+            #echo "true";
             _paymentResponse((object) $result);
         } else {
+            #echo "false";
             return ((object) $result);
         }
     }
@@ -139,7 +142,11 @@
 
         // get URL based on enviroment like ($env = 'test' or $env = 'prod')
         $URL = _getURL($env);
-
+        #print_r("i m in payment",$postedArray,$redirect,$salt);
+        #print_r($postedArray);
+        #print_r($redirect);
+        #print_r('i m end in payment');
+        #die();
         // process to start pay
         $pay_result = _pay($postedArray, $redirect, $salt, $URL);
 
@@ -195,7 +202,7 @@
     *
     * @param array $params - holds $_POST array, merchant key and transaction key.
     * 
-    * @return array $temp_array - holds the all posted value after removing space.
+    * @return array $temp_array - holds the all posted value after removing space.c
     *
     */
     function _removeSpaceAndPreparePostArray($params){
@@ -491,11 +498,14 @@
     */
     function _pay($params_array, $redirect, $salt_key, $url){
         $hash_key = '';
-
+        #print_r('in pay function');
         // generate hash key and push into params array.
         $hash_key = _getHashKey($params_array, $salt_key);
         $params_array['hash'] = $hash_key;
 
+        #print_r($hash_key);
+        #print_r($params_array);
+        #print_r(' in _pay function s');
         // call curl_call() for initiate pay link
         $curl_result = _curlCall($url . 'payment/initiateLink', http_build_query($params_array));
 
@@ -549,7 +559,9 @@
         }
 
         $hash .= $salt_key;
-
+        #echo $hash;
+        #echo " ";
+        #echo strtolower(hash('sha512', $hash));
         // generate hash key using hash function(predefine) and return
         return strtolower(hash('sha512', $hash));
     }
@@ -589,8 +601,13 @@
     *
     */
     function _curlCall($url, $params_array){
+        //print_r('i m in curl call');
         // Initializes a new session and return a cURL.
         $cURL = curl_init();
+
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
 
         // Set multiple options for a cURL transfer.
         curl_setopt_array(
@@ -608,6 +625,7 @@
 
         // Perform a cURL session
         $result = curl_exec($cURL);
+
 
         // check there is any error or not in curl execution.
         if (curl_errno($cURL)) {
@@ -646,12 +664,12 @@
     *
     */
     function _paymentResponse($result){
-
+        
         if ($result->status === 1) {
-            // first way
+            //first way
             header('Location:' . $result->data);
 
-            // second way
+            // second wayre
             // echo "
             //    <script type='text/javascript'>
             //           window.location ='".$result->data."'

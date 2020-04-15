@@ -85,7 +85,7 @@
         * --- curl_errno(arg1) :- check there is any error or not in curl execution.
         *
         */
-        public function initiatePaymentAPI($params, $redirect=true){
+        public function initiatePaymentAPI($params, $redirect=True){
             // include file
             include_once('payment.php');
 
