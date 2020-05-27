@@ -237,7 +237,10 @@
 
         if (array_key_exists("split_payments", $params)  and  !empty($params['split_payments']) )
             $temp_array['split_payments'] = trim($params['split_payments']);
-        // print_r($temp_array);
+
+        if (array_key_exists("show_payment_mode", $params)  and  !empty($params['show_payment_mode']) )
+            $temp_array['show_payment_mode'] = trim($params['show_payment_mode']);
+
         return $temp_array;
     }
 

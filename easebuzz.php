@@ -53,8 +53,8 @@
         /*
         * Based on API call change the Merchant key and salt key for testing(initiate payment).
         */
-        $MERCHANT_KEY = "xxxxxx";
-        $SALT = "xxxxxx";
+        $MERCHANT_KEY = "XXXX";
+        $SALT = "XXXX";
        // $ENV = "test";    // setup test enviroment (testpay.easebuzz.in).
         $ENV = "prod";   // setup production enviroment (pay.easebuzz.in).
  
