@@ -192,13 +192,17 @@
     *
     */
     function _removeSpaceAndPreparePostArray($params){
-        $temp_array = array(
+        /*$temp_array = array(
             'key' => trim( htmlentities($params['key'], ENT_QUOTES) ),
             'txnid' => trim( htmlentities($params['txnid'], ENT_QUOTES) ),
             'amount' => trim( htmlentities($params['amount'], ENT_QUOTES) ),
             'email' => trim( htmlentities($params['email'], ENT_QUOTES) ),
             'phone' => trim( htmlentities($params['phone'], ENT_QUOTES) )
-        );
+        );*/
+        $temp_array = array();
+        foreach ($params as $key => $value) {
+            $temp_array[$key] = trim(htmlentities($value, ENT_QUOTES));
+        }
         return $temp_array;
     }
 

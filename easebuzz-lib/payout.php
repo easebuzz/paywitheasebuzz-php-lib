@@ -151,11 +151,18 @@
     *
     */
     function _removeSpaceAndPreparePostArray($params){
-        $temp_array = array(
-            'merchant_key' => trim( htmlentities($params['merchant_key'], ENT_QUOTES) ),
-            'merchant_email' => trim( htmlentities($params['merchant_email'], ENT_QUOTES) ),
-            'payout_date' => trim( htmlentities($params['payout_date'], ENT_QUOTES) )
-        );
+        // $temp_array = array(
+        //     'merchant_key' => trim( htmlentities($params['merchant_key'], ENT_QUOTES) ),
+        //     'merchant_email' => trim( htmlentities($params['merchant_email'], ENT_QUOTES) ),
+        //     'payout_date' => trim( htmlentities($params['payout_date'], ENT_QUOTES) )
+        // );
+        // return $temp_array;
+        $temp_array = array();
+        foreach ($params as $key => $value) {            
+            if (array_key_exists($key, $params)  and  !empty($key) ){                    
+                $temp_array[$key] = trim(htmlentities($value, ENT_QUOTES));                     
+            }            
+        }        
         return $temp_array;
     }
 

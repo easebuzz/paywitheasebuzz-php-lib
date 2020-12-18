@@ -206,6 +206,7 @@
     *
     */
     function _removeSpaceAndPreparePostArray($params){
+       /*
         $temp_array = array(
             'key' => trim(htmlentities($params['key'], ENT_QUOTES)),
             'txnid' => trim(htmlentities($params['txnid'], ENT_QUOTES)),
@@ -240,7 +241,17 @@
 
         if (array_key_exists("show_payment_mode", $params)  and  !empty($params['show_payment_mode']) )
             $temp_array['show_payment_mode'] = trim($params['show_payment_mode']);
-
+        */
+        $temp_array = array();
+        foreach ($params as $key => $value) {            
+                if (array_key_exists($key, $params)  and  !empty($key) ){
+                    if($key != "split_payments"){
+                        $temp_array[$key] = trim(htmlentities($value, ENT_QUOTES));
+                     }else{
+                        $temp_array[$key] = trim($value);
+                     }
+                }            
+        }        
         return $temp_array;
     }
 
