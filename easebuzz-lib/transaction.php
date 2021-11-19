@@ -89,8 +89,7 @@
         // check amount should be float or not 
         if(preg_match("/^([\d]+)\.([\d]?[\d])$/", $postedArray['amount'])){
             $postedArray['amount'] = floatval($postedArray['amount']);
-            #print_r(' float value');
-            #print_r($postedArray['amount']);
+            
         }
 
         // type validation
@@ -409,7 +408,6 @@
 
         // generate hash key and push into params array.
         $hash_key = _getHashKey($params_array, $salt_key);
-        #print_r($hash_key);
         $params_array['hash'] = $hash_key;
 
         // call curl_call() for initiate pay link

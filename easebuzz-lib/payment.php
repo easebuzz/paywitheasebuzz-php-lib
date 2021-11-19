@@ -21,15 +21,41 @@
     */
     function initiate_payment($params, $redirect, $merchant_key, $salt, $env){
         $result = _payment($params, $redirect, $merchant_key, $salt, $env);
-        #print_r($result);
+        
         if ($redirect) {
-            #echo "true";
-            _paymentResponse((object) $result);
+            return _paymentResponse((object) $result);
         } else {
-            #echo "false";
-            return ((object) $result);
+            
+            if($result->status){
+                echo                  
+               "<div id='loading'></div>    
+               <script src='https://ebz-static.s3.ap-south-1.amazonaws.com/easecheckout/easebuzz-checkout.js'></script>
+               <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script> 
+                <script type='text/javascript'>
+                
+                    
+                    var easebuzzCheckout = new EasebuzzCheckout('". $merchant_key ."','prod')
+
+                   
+                    var options = {
+                    access_key: '".$result->data."' , // access key received via Initiate Payment
+                    onResponse: (response_data) => {
+                    document.getElementById('loading').innerText=JSON.stringify(response_data);
+                    console.log(response_data);
+                    },
+                    theme: '#123456' // color hex
+                    }
+                    easebuzzCheckout.initiatePayment(options);
+
+                </script>";  
+            }
+            else{
+                return json_encode($result);
+            }
+            }
+            
         }
-    }
+
 
 /*
     * _payment method use for initiate payment.
@@ -142,11 +168,7 @@
 
         // get URL based on enviroment like ($env = 'test' or $env = 'prod')
         $URL = _getURL($env);
-        #print_r("i m in payment",$postedArray,$redirect,$salt);
-        #print_r($postedArray);
-        #print_r($redirect);
-        #print_r('i m end in payment');
-        #die();
+       
         // process to start pay
         $pay_result = _pay($postedArray, $redirect, $salt, $URL);
 
@@ -296,6 +318,13 @@
 
         if (empty($params['phone']))
             $empty_value = 'Phone';
+
+        if (!empty($params['phone'])){
+            if (strlen((string)$params['phone'])!=10){
+                $empty_value = 'Phone number must be 10 digit and ';
+            }
+        }
+
 
         if (empty($params['productinfo']))
             $empty_value = 'Product Infomation';
@@ -511,20 +540,17 @@
     *   
     */
     function _pay($params_array, $redirect, $salt_key, $url){
+
         $hash_key = '';
-        #print_r('in pay function');
         // generate hash key and push into params array.
         $hash_key = _getHashKey($params_array, $salt_key);
         $params_array['hash'] = $hash_key;
-
-        #print_r($hash_key);
-        #print_r($params_array);
-        #print_r(' in _pay function s');
+       
         // call curl_call() for initiate pay link
         $curl_result = _curlCall($url . 'payment/initiateLink', http_build_query($params_array));
 
         $accesskey = ($curl_result->status === 1) ? $curl_result->data : null;
-
+        
         if (empty($accesskey)) {
             return $curl_result;
         } else {
@@ -532,6 +558,7 @@
                 $curl_result->data = $url . 'pay/' . $accesskey;
             } else {
                 $curl_result->data = $accesskey;
+                // return $accesskey;
             }
             return $curl_result;
         }
@@ -615,7 +642,6 @@
     *
     */
     function _curlCall($url, $params_array){
-        //print_r('i m in curl call');
         // Initializes a new session and return a cURL.
         $cURL = curl_init();
 
@@ -693,7 +719,7 @@
             exit();
         } else {
             //echo '<h3>'.$result['data'].'</h3>';
-            print_r(json_encode($result));
+            return json_encode($result);
         }
     }
 
