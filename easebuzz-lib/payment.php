@@ -26,30 +26,17 @@
             return _paymentResponse((object) $result);
         } else {
             
-            if($result->status){
-                echo                  
-               "<div id='loading'></div>    
-               <script src='https://ebz-static.s3.ap-south-1.amazonaws.com/easecheckout/easebuzz-checkout.js'></script>
-               <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script> 
-                <script type='text/javascript'>
-                
-                    
-                    var easebuzzCheckout = new EasebuzzCheckout('". $merchant_key ."','prod')
+            if($result->status==1){
 
-                   
-                    var options = {
-                    access_key: '".$result->data."' , // access key received via Initiate Payment
-                    onResponse: (response_data) => {
-                    document.getElementById('loading').innerText=JSON.stringify(response_data);
-                    console.log(response_data);
-                    },
-                    theme: '#123456' // color hex
-                    }
-                    easebuzzCheckout.initiatePayment(options);
+                $iframe_result = array(
+                    "status"=>$result->status,
+                    'key' => $merchant_key,
+                    'access_key' => $result->data,
+                );
 
-                </script>";  
+                return json_encode($iframe_result);
             }
-            else{
+            else{ 
                 return json_encode($result);
             }
             }
@@ -548,7 +535,10 @@
        
         // call curl_call() for initiate pay link
         $curl_result = _curlCall($url . 'payment/initiateLink', http_build_query($params_array));
-
+         
+        //  print_r($curl_result);
+        //  die;
+         
         $accesskey = ($curl_result->status === 1) ? $curl_result->data : null;
         
         if (empty($accesskey)) {

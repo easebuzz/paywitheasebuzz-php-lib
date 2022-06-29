@@ -3,7 +3,7 @@
     include_once('easebuzz-lib/easebuzz_payment_gateway.php');
 
     // salt for testing env
-    $SALT = "XXXXX";
+    $SALT = "XXXXXX";
 
     /*
     * Get the API response and verify response is correct or not.

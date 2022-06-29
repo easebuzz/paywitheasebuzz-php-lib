@@ -5,9 +5,13 @@ jQuery(document).ready(function() {
         e.preventDefault();
         switch (this.parentNode.id) {
             // -----^-- get parent node and it's id
-
+           
             case "initiate_payment_tab":
                 window.location.href = "view/initiate_payment.html";
+            break;
+
+            case "initiate_payment_iframe_tab":
+                window.location.href = "view/initiate_payment_iframe.html";
             break;
 
             case "transaction_tab":

@@ -52,9 +52,9 @@
         /*
         * Based on API call change the Merchant key and salt key for testing(initiate payment).
         */
-        $MERCHANT_KEY = "XXXXX";
-        $SALT = "XXXXX";
-       // $ENV = "test";    // setup test enviroment (testpay.easebuzz.in).
+        $MERCHANT_KEY = "XXXXXX";
+        $SALT = "XXXXXX";
+        //$ENV = "test";    // setup test enviroment (testpay.easebuzz.in).
         $ENV = "prod";   // setup production enviroment (pay.easebuzz.in).
        
         $easebuzzObj = new Easebuzz($MERCHANT_KEY, $SALT, $ENV);
@@ -68,11 +68,28 @@
                 Array ( [txnid] => T3SAT0B5OL [amount] => 100.0 [firstname] => jitendra [email] => test@gmail.com [phone] => 1231231235 [productinfo] => Laptop [surl] => http://localhost:3000/response.php [furl] => http://localhost:3000/response.php [udf1] => aaaa [udf2] => aa [udf3] => aaaa [udf4] => aaaa [udf5] => aaaa [address1] => aaaa [address2] => aaaa [city] => aaaa [state] => aaaa [country] => aaaa [zipcode] => 123123 ) 
             */
            
+
             $result = $easebuzzObj->initiatePaymentAPI($_POST);
             
             easebuzzAPIResponse($result);
 
-        }else if($apiname === "transaction"){ 
+           
+
+        }
+        else if($apiname === "initiate_payment_iframe"){
+
+            /*  Very Important Notes
+            * 
+            * Post Data should be below format.
+            *
+                Array ( [txnid] => T3SAT0B5OL [amount] => 100.0 [firstname] => jitendra [email] => test@gmail.com [phone] => 1231231235 [productinfo] => Laptop [surl] => http://localhost:3000/response.php [furl] => http://localhost:3000/response.php [udf1] => aaaa [udf2] => aa [udf3] => aaaa [udf4] => aaaa [udf5] => aaaa [address1] => aaaa [address2] => aaaa [city] => aaaa [state] => aaaa [country] => aaaa [zipcode] => 123123 ) 
+            */
+           
+            $result = $easebuzzObj->initiatePaymentAPI($_POST);
+            
+            easebuzzAPIResponse($result);
+        }
+        else if($apiname === "transaction"){ 
 
             /*  Very Important Notes
             * 
@@ -82,9 +99,10 @@
             */
             $result = $easebuzzObj->transactionAPI($_POST);
 
-            easebuzzAPIResponse($result);
-     
-        }else if($apiname === "transaction_date" || $apiname === "transaction_date_api"){ 
+            easebuzzAPIResponse($result); 
+        }
+          
+        else if($apiname === "transaction_date" || $apiname === "transaction_date_api"){ 
 
             /*  Very Important Notes
             * 
