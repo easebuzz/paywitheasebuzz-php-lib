@@ -103,12 +103,11 @@
         $temp = explode('.', $temp);
         //echo $temp;
         $diff_amount_string = '';
-        if(strlen($temp[1]) == 0){
+        if(strlen($temp[1] ?? '') == 0){
             $diff_amount_string = $temp[0].'.0';
             $postedArray['amount'] =$diff_amount_string;
             
-        }
-         elseif( strlen($temp[1])==1 || strlen($temp[1])==2 ){
+        } elseif( strlen($temp[1] ?? '')==1 || strlen($temp[1] ?? '')==2 ){
             $diff_amount_string = $temp[0].'.'.$temp[1];
             
         } else{
