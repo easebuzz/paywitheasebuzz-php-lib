@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <title>Initiate Payment API</title>
+    <title>Initiate Seamless Payment API</title>
     <style>
         .toggle-container {
             display: flex;
@@ -63,6 +63,24 @@
         input:checked+.slider:before {
             transform: translateX(24px);
         }
+
+        .seamless-field {
+            display: none;
+        }
+
+        .seamless-field.visible {
+            display: block;
+        }
+
+        #payment_mode {
+            border: 1px solid;
+            border-radius: 5px;
+            padding: 7px 5px;
+            font-size: 1em;
+            margin: 5px 10px 5px 0px;
+            min-width: 100%;
+            background-color: #fff;
+        }
     </style>
 </head>
 
@@ -91,16 +109,22 @@
         </header>
 
         <div class="form-container">
-            <h2><a href="https://docs.easebuzz.in/docs/payment-gateway/8ec545c331e6f-initiate-payment-api"
+            <h2><a href="https://docs.easebuzz.in/docs/payment-gateway/k3ho860cy66zh-seamless-integration-merchant-hosted"
                     target="_blank" style="color:#000;text-decoration:none;"
                     onmouseover="this.style.textDecoration='underline'"
-                    onmouseout="this.style.textDecoration='none'">INITIATE PAYMENT API &#x2197;</a></h2>
+                    onmouseout="this.style.textDecoration='none'">INITIATE SEAMLESS PAYMENT API &#x2197;</a></h2>
             <hr>
-            <form name="initiatePaymentForm" method="POST" action="../easebuzz.php?api_name=initiate_payment">
+            <form name="seamlessPaymentForm" method="POST" action="../easebuzz.php?api_name=initiate_seamless_payment">
                 <div class="main-form">
                     <h3>Mandatory Parameters</h3>
                     <hr>
                     <div class="mandatory-data">
+                        <div class="form-field">
+                            <label for="request_flow">Request Flow<sup>*</sup></label>
+                            <input id="request_flow_display" value="SEAMLESS" disabled>
+                            <input type="hidden" id="request_flow" name="request_flow" value="SEAMLESS">
+                        </div>
+
                         <div class="form-field">
                             <label for="txnid">Transaction ID<sup>*</sup></label>
                             <input id="txnid" name="txnid" placeholder="T31Q6JT8HB" required
@@ -153,6 +177,83 @@
                             <input id="furl" name="furl" value="" placeholder="http://localhost:3000/response.php"
                                 required pattern="^https?://.*"
                                 title="Enter a valid URL starting with http:// or https://">
+                        </div>
+                    </div>
+
+                    <h3>Seamless API</h3>
+                    <hr>
+                    <div class="mandatory-data" id="seamless_api_section">
+                        <div class="form-field">
+                            <label for="payment_mode">Payment Mode<sup>*</sup></label>
+                            <select id="payment_mode" name="payment_mode" required>
+                                <option value="">-- Select Payment Mode --</option>
+                                <option value="NB">NB (Net Banking)</option>
+                                <option value="DC">DC (Debit Card)</option>
+                                <option value="CC">CC (Credit Card)</option>
+                                <option value="MW">MW (Mobile Wallet)</option>
+                                <option value="UPI">UPI (UPI)</option>
+                                <option value="OM">OM (Ola Money)</option>
+                                <option value="PL">PL (Pay Later)</option>
+                                <option value="EMI">EMI</option>
+                            </select>
+                        </div>
+
+                        <!-- Conditional fields based on payment_mode -->
+                        <div class="form-field seamless-field" id="request_mode_field">
+                            <label for="request_mode">Request Mode</label>
+                            <input id="request_mode_display" value="SUVA" disabled>
+                            <input type="hidden" id="request_mode" name="request_mode" value="SUVA">
+                        </div>
+
+                        <div class="form-field seamless-field" id="bank_code_field">
+                            <label for="bank_code">Bank Code<sup>*</sup></label>
+                            <input id="bank_code" name="bank_code" placeholder="Enter Bank Code">
+                        </div>
+
+                        <div class="form-field seamless-field" id="card_number_field">
+                            <label for="card_number">Card Number<sup>*</sup></label>
+                            <input id="card_number" name="card_number" placeholder="4111111111111111"
+                                pattern="^[0-9\s]{13,19}$" maxlength="19"
+                                title="Enter a valid card number (13-19 digits)">
+                        </div>
+
+                        <div class="form-field seamless-field" id="card_holder_name_field">
+                            <label for="card_holder_name">Card Holder Name<sup>*</sup></label>
+                            <input id="card_holder_name" name="card_holder_name"
+                                placeholder="Enter Card Holder Name"
+                                pattern="^[a-zA-Z\s.]{2,50}$"
+                                title="Only alphabets, spaces and dots allowed. Max 50 chars.">
+                        </div>
+
+                        <div class="form-field seamless-field" id="card_cvv_field">
+                            <label for="card_cvv">Card CVV<sup>*</sup></label>
+                            <input id="card_cvv" name="card_cvv" placeholder="123"
+                                pattern="^[0-9]{3,4}$" maxlength="4"
+                                title="Enter 3 or 4 digit CVV">
+                        </div>
+
+                        <div class="form-field seamless-field" id="card_expiry_date_field">
+                            <label for="card_expiry_date">Card Expiry Date<sup>*</sup> (MM/YY)</label>
+                            <input id="card_expiry_date" name="card_expiry_date" placeholder="MM/YY"
+                                maxlength="5"
+                                pattern="^(0[1-9]|1[0-2])\/[0-9]{2}$" title="Format: MM/YY">
+                        </div>
+
+                        <div class="form-field seamless-field" id="upi_qr_field">
+                            <label for="upi_qr">UPI QR<sup>*</sup></label>
+                            <input id="upi_qr" name="upi_qr" placeholder="true">
+                        </div>
+
+                        <div class="form-field seamless-field" id="pay_later_app_field">
+                            <label for="pay_later_app">Pay Later App<sup>*</sup></label>
+                            <input id="pay_later_app" name="pay_later_app" placeholder="Simpl" value="Simpl"
+                                readonly>
+                        </div>
+
+                        <div class="form-field seamless-field" id="emi_object_field">
+                            <label for="emi_object">EMI Object (JSON)<sup>*</sup></label>
+                            <input id="emi_object" name="emi_object"
+                                placeholder='{"emi_tenure": 3, "emi_bank": "HDFC"}'>
                         </div>
                     </div>
 
@@ -247,24 +348,8 @@
                         </div>
                     </div>
 
-
                     <h4 style="color:#555;margin-top:15px;">General</h4>
                     <div class="optional-data">
-                        <div class="form-field">
-                            <label for="payment_category">Payment Category</label>
-                            <input id="payment_category" name="payment_category" placeholder="TPV">
-                        </div>
-
-                        <div class="form-field">
-                            <label for="account_no">Account No.</label>
-                            <input id="account_no" name="account_no" placeholder="0000000000000000">
-                        </div>
-
-                        <div class="form-field">
-                            <label for="ifsc">IFSC</label>
-                            <input id="ifsc" name="ifsc" placeholder="IFSCCODE">
-                        </div>
-
                         <div class="form-field">
                             <label for="sub_merchant_id">Sub-Merchant ID</label>
                             <input id="sub_merchant_id" name="sub_merchant_id" placeholder="S123ABC"
@@ -298,8 +383,9 @@
     </div>
     <script src="../assets/js/form-validation.js"></script>
     <script>
+        // Auto Fill Toggle
         document.getElementById('autoFillToggle').addEventListener('change', function () {
-            var form = document.forms['initiatePaymentForm'];
+            var form = document.forms['seamlessPaymentForm'];
             if (this.checked) {
                 form.txnid.value = 'TXN' + Math.random().toString(36).substring(2, 10).toUpperCase();
                 form.amount.value = '125.50';
@@ -310,11 +396,91 @@
                 form.surl.value = 'http://localhost:3000/response.php';
                 form.furl.value = 'http://localhost:3000/response.php';
             } else {
-                var inputs = form.querySelectorAll('input');
+                var inputs = form.querySelectorAll('input:not([type="hidden"]):not([type="checkbox"]):not([disabled]):not([readonly])');
                 for (var i = 0; i < inputs.length; i++) {
                     inputs[i].value = '';
                 }
+                form.payment_mode.value = '';
+                hideAllFields();
             }
+        });
+
+        // Payment Mode conditional fields
+        var paymentModeSelect = document.getElementById('payment_mode');
+
+        var fieldMap = {
+            'NB': ['bank_code_field'],
+            'MW': ['bank_code_field'],
+            'OM': ['bank_code_field'],
+            'DC': ['card_number_field', 'card_holder_name_field', 'card_cvv_field', 'card_expiry_date_field'],
+            'CC': ['card_number_field', 'card_holder_name_field', 'card_cvv_field', 'card_expiry_date_field'],
+            'EMI': ['card_number_field', 'card_holder_name_field', 'card_cvv_field', 'card_expiry_date_field', 'emi_object_field'],
+            'UPI': ['upi_qr_field', 'request_mode_field'],
+            'PL': ['pay_later_app_field']
+        };
+
+        var allSeamlessFields = document.querySelectorAll('.seamless-field');
+
+        function hideAllFields() {
+            allSeamlessFields.forEach(function (field) {
+                field.classList.remove('visible');
+                var input = field.querySelector('input');
+                if (input) {
+                    if (input.id !== 'pay_later_app' && input.id !== 'upi_qr' && input.id !== 'request_mode_display') {
+                        input.value = '';
+                    }
+                    input.removeAttribute('required');
+                    input.disabled = true;
+                }
+            });
+        }
+
+        paymentModeSelect.addEventListener('change', function () {
+            hideAllFields();
+            var mode = this.value;
+            var fields = fieldMap[mode] || [];
+
+            // Disable all seamless inputs so they don't submit
+            allSeamlessFields.forEach(function (field) {
+                var input = field.querySelector('input');
+                if (input) {
+                    input.disabled = true;
+                }
+            });
+
+            fields.forEach(function (fieldId) {
+                var field = document.getElementById(fieldId);
+                if (field) {
+                    field.classList.add('visible');
+                    var input = field.querySelector('input');
+                    if (input) {
+                        input.disabled = false;
+                        if (input.id !== 'upi_qr' && input.id !== 'pay_later_app' && input.id !== 'request_mode') {
+                            input.setAttribute('required', 'required');
+                        }
+                    }
+                }
+            });
+        });
+
+        // Auto-format expiry date: insert / after MM
+        document.getElementById('card_expiry_date').addEventListener('input', function (e) {
+            var val = this.value.replace(/[^0-9]/g, '');
+            if (val.length >= 2) {
+                this.value = val.substring(0, 2) + '/' + val.substring(2, 4);
+            } else {
+                this.value = val;
+            }
+        });
+
+        // Restrict card number to digits only
+        document.getElementById('card_number').addEventListener('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // Restrict CVV to digits only
+        document.getElementById('card_cvv').addEventListener('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
         });
     </script>
 </body>

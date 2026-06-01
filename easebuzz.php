@@ -1,158 +1,158 @@
 <?php
-    // include file
-    include_once('easebuzz-lib/easebuzz_payment_gateway.php');
+/**
+ * Easebuzz Sample Router
+ *
+ * Routes API requests to individual handler files.
+ * Each API has its own file — merchants can pick only what they need.
+ */
 
-    /*
-    * Create object for call easepay payment gate API and Pass required data into constructor.
-    * Get API response.
-    *  
-    * param string $_GET['apiname'] - holds the API name.
-    * param  string $MERCHANT_KEY - holds the merchant key.
-    * param  string $SALT - holds the merchant salt key.
-    * param  string $ENV - holds the env(enviroment).
-    * param  string $_POST - holds the form data.
-    *
-    * ##Return values
-    *   
-    * - return array ApiResponse['status']== 1 successful.
-    * - return array ApiResponse['status']== 0 error.
-    *
-    * @param string $_GET['apiname'] - holds the API name.
-    * @param  string $MERCHANT_KEY - holds the merchant key.
-    * @param  string $SALT - holds the merchant salt key.
-    * @param  string $ENV - holds the env(enviroment).
-    * @param  string $_POST - holds the form data.
-    *
-    * @return array ApiResponse['status']== 1 successful. 
-    * @return array ApiResponse['status']== 0 error. 
-    *
-    */
-    if(!empty($_POST) && (sizeof($_POST) > 0)){
+include_once('easebuzz-lib/utils.php');
 
-        /*
-        * There are three approch to call easebuzz API.
-        *
-        * 1. using hidden api_name which is $_POST from form.
-        * 2. using pass api_name into URL.
-        * 3. using extract html file name then based on file name call API.
-        *
-        */
+// Load environment
+_loadEnvFile(__DIR__ . '/.env');
 
-        // first way
-        // $apiname = trim(htmlentities($_POST['api_name'], ENT_QUOTES));
+// Load configuration
+$config = _getConfig();
+if (isset($config['status']) && $config['status'] === 0) {
+    displayError($config['data']);
+    exit;
+}
 
-        // second way
-        $apiname = trim(htmlentities($_GET['api_name'], ENT_QUOTES));
+$merchantKey = $config['merchant_key'];
+$salt = $config['salt'];
+$env = $config['env'];
 
-        // third way
-        // $url_link = $_SERVER['HTTP_REFERER'];
-        // $apiname = explode('.', ( end( explode( '/',$url_link) ) ) )[0];
-        // $apiname = trim(htmlentities($apiname, ENT_QUOTES));
+// Validate request
+if (empty($_POST) || count($_POST) === 0) {
+    displayError('Please fill all mandatory fields.');
+    exit;
+}
 
-        /*
-        * Based on API call change the Merchant key and salt key for testing(initiate payment).
-        */
-        $MERCHANT_KEY = "XXXXXX";
-        $SALT = "XXXXXX";
-        //$ENV = "test";    // setup test enviroment (testpay.easebuzz.in).
-        $ENV = "prod";   // setup production enviroment (pay.easebuzz.in).
-       
-        $easebuzzObj = new Easebuzz($MERCHANT_KEY, $SALT, $ENV);
-       
-        if($apiname === "initiate_payment"){
+// Route to API handler using strict whitelist
+$apiName = isset($_GET['api_name']) ? $_GET['api_name'] : '';
 
-            /*  Very Important Notes
-            * 
-            * Post Data should be below format.
-            *
-                Array ( [txnid] => T3SAT0B5OL [amount] => 100.0 [firstname] => jitendra [email] => test@gmail.com [phone] => 1231231235 [productinfo] => Laptop [surl] => http://localhost:3000/response.php [furl] => http://localhost:3000/response.php [udf1] => aaaa [udf2] => aa [udf3] => aaaa [udf4] => aaaa [udf5] => aaaa [address1] => aaaa [address2] => aaaa [city] => aaaa [state] => aaaa [country] => aaaa [zipcode] => 123123 ) 
-            */
-           
+// Static mapping — no user input touches file paths
+switch ($apiName) {
+    case 'initiate_payment':
+        $postData = $_POST;
+        include(__DIR__ . '/easebuzz-lib/initiate_payment.php');
+        break;
+    case 'initiate_payment_iframe':
+        $postData = $_POST;
+        include(__DIR__ . '/easebuzz-lib/initiate_payment_iframe.php');
+        break;
+    case 'initiate_seamless_payment':
+        $postData = $_POST;
+        include(__DIR__ . '/easebuzz-lib/initiate_seamless_payment.php');
+        break;
+    case 'transaction':
+        $postData = $_POST;
+        include(__DIR__ . '/easebuzz-lib/transaction.php');
+        break;
+    case 'transaction_date':
+        $postData = $_POST;
+        include(__DIR__ . '/easebuzz-lib/transaction_date.php');
+        break;
+    case 'refund':
+        $postData = $_POST;
+        include(__DIR__ . '/easebuzz-lib/refund.php');
+        break;
+    case 'refund_status':
+        $postData = $_POST;
+        include(__DIR__ . '/easebuzz-lib/refund_status.php');
+        break;
+    case 'payout':
+        $postData = $_POST;
+        include(__DIR__ . '/easebuzz-lib/payout.php');
+        break;
+    case 'easy_collect':
+        $postData = $_POST;
+        include(__DIR__ . '/easebuzz-lib/easy_collect.php');
+        break;
+    default:
+        displayError('Unknown API. Please try again.');
+        exit;
+}
 
-            $result = $easebuzzObj->initiatePaymentAPI($_POST);
-            
-            easebuzzAPIResponse($result);
+// --- Helper Functions ---
 
-           
+function displayError($message)
+{
+    ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div style="margin:20px auto;max-width:900px;padding:20px;">
+    <h2><a href="index.html">&larr; Back</a></h2>
+    <div style="background:#ffebee;border:1px solid #f44336;color:#c62828;padding:15px;border-radius:5px;">
+        <h3>Error</h3>
+        <p><?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?></p>
+    </div>
+</div>
+</body>
+</html>
+    <?php
+}
 
-        }
-        else if($apiname === "initiate_payment_iframe"){
-
-            /*  Very Important Notes
-            * 
-            * Post Data should be below format.
-            *
-                Array ( [txnid] => T3SAT0B5OL [amount] => 100.0 [firstname] => jitendra [email] => test@gmail.com [phone] => 1231231235 [productinfo] => Laptop [surl] => http://localhost:3000/response.php [furl] => http://localhost:3000/response.php [udf1] => aaaa [udf2] => aa [udf3] => aaaa [udf4] => aaaa [udf5] => aaaa [address1] => aaaa [address2] => aaaa [city] => aaaa [state] => aaaa [country] => aaaa [zipcode] => 123123 ) 
-            */
-           
-            $result = $easebuzzObj->initiatePaymentAPI($_POST);
-            
-            easebuzzAPIResponse($result);
-        }
-        else if($apiname === "transaction"){ 
-
-            /*  Very Important Notes
-            * 
-            * Post Data should be below format.
-            *
-                Array ( [txnid] => TZIF0SS24C [amount] => 1.03 [email] => test@gmail.com [phone] => 1231231235 )
-            */
-            $result = $easebuzzObj->transactionAPI($_POST);
-
-            easebuzzAPIResponse($result); 
-        }
-          
-        else if($apiname === "transaction_date" || $apiname === "transaction_date_api"){ 
-
-            /*  Very Important Notes
-            * 
-            * Post Data should be below format.
-            *
-                Array ( [merchant_email] => jitendra@gmail.com [transaction_date] => 06-06-2018 )
-            */
-            $result = $easebuzzObj->transactionDateAPI($_POST);
-
-            easebuzzAPIResponse($result);
-                       
-        }else if($apiname === "refund"){
-            
-            /*  Very Important Notes
-            * 
-            * Post Data should be below format.
-            *
-                Array ( [txnid] => ASD20088 [refund_amount] => 1.03 [phone] => 1231231235 [email] => test@gmail.com [amount] => 1.03 )
-            */
-            $result = $easebuzzObj->refundAPI($_POST);
-
-            easebuzzAPIResponse($result);
-                       
-        }else if($apiname === "payout"){
-
-            /*  Very Important Notes
-            * 
-            * Post Data should be below format.
-            *
-               Array ( [merchant_email] => jitendra@gmail.com [payout_date] => 08-06-2018 )
-            */
-            $result = $easebuzzObj->payoutAPI($_POST);
-
-            easebuzzAPIResponse($result);
-                       
-        }else{
-
-            echo '<h1>You called wrong API, Pleae try again</h1>';
-        }
-
-    }else{
-        echo '<h1>Please fill all mandatory fields.</h1>';
-    }
-
-
-    /*
-    *  Show All API Response except initiate Payment API
-    */
-    function easebuzzAPIResponse($data){
-        print_r($data);
-    }
-
-?>
+function displayResponse($result, $postData)
+{
+    $status = isset($result['status']) ? $result['status'] : 0;
+    $data = isset($result['data']) ? $result['data'] : null;
+    ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Response</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .response-container{margin:20px auto;max-width:900px;padding:20px}
+        .error-block{background:#ffebee;border:1px solid #f44336;color:#c62828;padding:15px;border-radius:5px;margin:10px 0}
+        .success-block{background:#e8f5e8;border:1px solid #4caf50;padding:15px;border-radius:5px;margin:10px 0}
+        .json-display{background:#f5f5f5;padding:15px;font-family:'Courier New',monospace;font-size:14px;overflow-x:auto;border-radius:4px;white-space:pre-wrap;word-wrap:break-word}
+        .request-details{margin-top:15px}
+        .request-details table{width:100%;border-collapse:collapse}
+        .request-details td{padding:5px 10px;border-bottom:1px solid #ddd}
+        .request-details td:first-child{font-weight:bold;width:150px}
+    </style>
+</head>
+<body>
+<div class="response-container">
+    <h2><a href="index.html">&larr; Back</a></h2>
+    <div class="request-details">
+        <h3>Request Details</h3>
+        <table>
+            <?php
+            $displayFields = array('txnid', 'amount', 'firstname', 'email', 'phone', 'productinfo');
+            foreach ($displayFields as $field) {
+                if (!empty($postData[$field])) {
+                    echo '<tr><td>' . htmlspecialchars($field, ENT_QUOTES, 'UTF-8') . '</td><td>' . htmlspecialchars($postData[$field], ENT_QUOTES, 'UTF-8') . '</td></tr>';
+                }
+            }
+            ?>
+        </table>
+    </div>
+    <h2>API Response</h2>
+    <?php if ($status == 1): ?>
+        <div class="success-block">
+            <h3>Success</h3>
+            <pre class="json-display"><?php echo htmlspecialchars(is_array($data) || is_object($data) ? json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : $data, ENT_QUOTES, 'UTF-8'); ?></pre>
+        </div>
+    <?php else: ?>
+        <div class="error-block">
+            <h3>Error</h3>
+            <pre class="json-display"><?php echo htmlspecialchars(is_array($data) || is_object($data) ? json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : $data, ENT_QUOTES, 'UTF-8'); ?></pre>
+        </div>
+    <?php endif; ?>
+</div>
+</body>
+</html>
+    <?php
+}

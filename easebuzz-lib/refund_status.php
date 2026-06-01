@@ -1,12 +1,13 @@
 <?php
 /**
- * Refund V2 API
+ * Refund Status API
  *
- * Initiates a full or partial refund for a completed transaction.
+ * Checks the status of a previously initiated refund.
  *
- * REQUIRED PARAMS: easebuzz_id, refund_amount, merchant_refund_id
- * ENDPOINT: POST {dashboardBaseUrl}/transaction/v2/refund
- * HASH SEQUENCE: key|merchant_refund_id|easebuzz_id|refund_amount|SALT
+ * REQUIRED PARAMS: easebuzz_id
+ * OPTIONAL PARAMS: merchant_refund_id (filter refunds by unique refund ID)
+ * ENDPOINT: POST {dashboardBaseUrl}/refund/v1/retrieve
+ * HASH SEQUENCE: key|easebuzz_id|SALT
  * CONTENT-TYPE: application/x-www-form-urlencoded
  */
 
@@ -15,7 +16,7 @@ include_once(__DIR__ . '/utils.php');
 $params = _sanitizeParams($postData);
 
 // Validate
-$error = _validateMandatoryFields($params, array('easebuzz_id', 'refund_amount', 'merchant_refund_id'));
+$error = _validateMandatoryFields($params, array('easebuzz_id'));
 if ($error !== null) {
     displayResponse(array('status' => 0, 'data' => $error), $params);
     return;
@@ -23,11 +24,11 @@ if ($error !== null) {
 
 // Add key and generate hash
 $params['key'] = $merchantKey;
-$params['hash'] = generateHashValue($params, $salt, 'refund');
+$params['hash'] = generateHashValue($params, $salt, 'refund_status');
 $params = _removeEmptyParams($params);
 
 // Call API
-$url = fetchBaseUrl($env) . 'transaction/v2/refund';
+$url = fetchBaseUrl($env) . 'refund/v1/retrieve';
 $response = _curlCall($url, http_build_query($params));
 
 // Return complete response

@@ -1,70 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="stylesheet" href="../assets/css/style.css">
-        <title>Refund API</title>
-    </head>
-    <body>
-        <div class="grid-container">
-            <header class="wrapper">
-                <div class="logo">
-                    <a href="../index.html">
-                        <img src="../assets/images/eb-logo.svg" alt="Easebuzz">
-                    </a>
-                </div>
 
-                <div class="hedding">
-                    <h2><a class="highlight" href="../index.html">Back</a></h2>
-                </div>
-            </header>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <title>Refund API</title>
+</head>
 
-            <div class="form-container">
-                <h2>REFUND API</h2>
-                <hr>
-                <form method="POST" action="../easebuzz.php?api_name=refund">
-                    <div class="main-form">
-                        <h3>Mandatory Parameters</h3>
-                        <hr>
-                        <div class="mandatory-data">
-
-                            <div class="form-field">
-                                <label for="txnid">Easebuzz Transaction ID<sup>*</sup></label>
-                                <input id="txnid" class="txnid" name="txnid" value="" placeholder="SBD12345">
-                            </div>
-            
-                            <div class="form-field">
-                                <label for="refund_amount">Refund Amount<sup>(should be float)*</sup></label>
-                                <input id="refund_amount" class="refund_amount" name="refund_amount" value="" placeholder="125.25">
-                            </div>
-            
-                            <div class="form-field">
-                                <label for="phone">Customer Phone Number<sup>*</sup></label>
-                                <input id="phone" class="phone" name="phone" value="" placeholder="0123456789">
-                            </div>
-
-                            <div class="form-field">
-                                <label for="email">Customer Email ID<sup>*</sup></label>
-                                <input id="email" class="email" name="email" value="" placeholder="refund@easebuzz.in">
-                            </div>
-            
-                            <div class="form-field">
-                                <label for="amount">Customer's Paid Amount<sup>(should be float)*</sup></label>
-                                <input id="amount" class="amount" name="amount" value="" placeholder="125.25">
-                            </div>
-                        </div>
-
-                        <!--<input type="hidden" name="api_name" value="refund"> -->
-                        <div class="btn-submit">
-                            <button type="submit">SUBMIT</button>
-                        </div>
-
-                    </div>
-                </form>
+<body>
+    <div class="grid-container">
+        <header class="wrapper">
+            <div class="logo">
+                <a href="../index.html">
+                    <img src="../assets/images/Easebuzz_Logo_ White_Text.svg" alt="Easebuzz">
+                </a>
             </div>
+            <div class="hedding">
+                <h2><a class="highlight" href="../index.html">Back</a></h2>
+            </div>
+        </header>
 
+        <div class="form-container">
+            <h2><a href="https://docs.easebuzz.in/docs/payment-gateway/c2ac48618b3bd-refund-api-v2"
+                    target="_blank" style="color:#000;text-decoration:none;"
+                    onmouseover="this.style.textDecoration='underline'"
+                    onmouseout="this.style.textDecoration='none'">REFUND API &#x2197;</a></h2>
+            <hr>
+            <form method="POST" action="../easebuzz.php?api_name=refund">
+                <div class="main-form">
+                    <h3>Mandatory Parameters</h3>
+                    <hr>
+                    <div class="mandatory-data">
+                        <div class="form-field">
+                            <label for="easebuzz_id">Easebuzz ID<sup>*</sup></label>
+                            <input id="easebuzz_id" name="easebuzz_id" placeholder="E2308172536" required>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="refund_amount">Refund Amount<sup>(should be float)*</sup></label>
+                            <input id="refund_amount" name="refund_amount" placeholder="125.25" required
+                                title="Refund amount must be a number with decimal (e.g., 50.0).">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="merchant_refund_id">Merchant Refund ID<sup>*</sup></label>
+                            <input id="merchant_refund_id" name="merchant_refund_id" placeholder="M123456" required>
+                        </div>
+                    </div>
+
+                    <h3>Optional Parameters</h3>
+                    <hr>
+
+                    <h4 style="color:#555;margin-top:15px;">UDF (User Defined Fields)</h4>
+                    <div class="optional-data">
+                        <div class="form-field">
+                            <label for="udf1">UDF1</label>
+                            <input id="udf1" name="udf1" placeholder="User description1"
+                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
+                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="udf2">UDF2</label>
+                            <input id="udf2" name="udf2" placeholder="User description2"
+                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
+                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="udf3">UDF3</label>
+                            <input id="udf3" name="udf3" placeholder="User description3"
+                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
+                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="udf4">UDF4</label>
+                            <input id="udf4" name="udf4" placeholder="User description4"
+                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
+                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="udf5">UDF5</label>
+                            <input id="udf5" name="udf5" placeholder="User description5"
+                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
+                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="udf6">UDF6</label>
+                            <input id="udf6" name="udf6" placeholder="User description6"
+                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
+                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="udf7">UDF7</label>
+                            <input id="udf7" name="udf7" placeholder="User description7"
+                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
+                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
+                        </div>
+                    </div>
+
+                    <h4 style="color:#555;margin-top:15px;">General</h4>
+                    <div class="optional-data">
+                        <div class="form-field">
+                            <label for="split_payments">Split Payments</label>
+                            <input id="split_payments" name="split_payments"
+                                placeholder='{"label_of_bank1": 60, "label_of_bank2": 40}'>
+                        </div>
+                    </div>
+
+                    <div class="btn-submit">
+                        <button type="submit">SUBMIT</button>
+                    </div>
+                </div>
+            </form>
         </div>
-    </body>
+    </div>
+    <script src="../assets/js/form-validation.js"></script>
+</body>
+
 </html>

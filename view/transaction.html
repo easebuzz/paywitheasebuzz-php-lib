@@ -12,18 +12,19 @@
             <header class="wrapper">
                 <div class="logo">
                     <a href="../index.html">
-                        <img src="../assets/images/eb-logo.svg" alt="Easebuzz">
+                        <img src="../assets/images/Easebuzz_Logo_ White_Text.svg" alt="Easebuzz">
                     </a>
                 </div>
-
                 <div class="hedding">
                     <h2><a class="highlight" href="../index.html">Back</a></h2>
                 </div>
             </header>
         </div>
-
         <div class="form-container">
-            <h2>TRANSACTION API</h2>
+            <h2><a href="https://docs.easebuzz.in/docs/payment-gateway/f607brr7f8ek8-transaction-api-v2-1"
+                    target="_blank" style="color:#000;text-decoration:none;"
+                    onmouseover="this.style.textDecoration='underline'"
+                    onmouseout="this.style.textDecoration='none'">TRANSACTION API &#x2197;</a></h2>
             <hr>
             <form method="POST" action="../easebuzz.php?api_name=transaction">
                 <div class="main-form">
@@ -32,33 +33,15 @@
                     <div class="mandatory-data">
                         <div class="form-field">
                             <label for="txnid">Merchant Transaction ID<sup>*</sup></label>
-                            <input id="txnid" class="txnid" name="txnid" value="" placeholder="ASD12345">
+                            <input id="txnid" name="txnid" placeholder="ASD12345" required pattern="[a-zA-Z0-9_|\-/]{1,40}">
                         </div>
-        
-                        <div class="form-field">
-                            <label for="amount">Transaction Amount<sup>(should be float)*</sup></label>
-                            <input id="amount" class="amount" name="amount" value="" placeholder="125.25">
-                        </div>
-        
-                        <div class="form-field">
-                            <label for="email">Customer Email ID<sup>*</sup></label>
-                            <input id="email" class="email" name="email" value="" placeholder="trasaction@easebuzz.in">
-                        </div>
-        
-                        <div class="form-field">
-                            <label for="phone">Customer Phone Number<sup>*</sup></label>
-                            <input id="phone" class="phone" name="phone" value="" placeholder="0123456789">
-                        </div>
-        
-                        <!--<input type="hidden" name="api_name" value="transaction"> -->                     
-                    </div>
-                    
+                    </div>  
                     <div class="btn-submit">
-                        <button type="submit">Submit</button>  
+                        <button type="submit">Submit</button>
                     </div> 
                 </div>
             </form>
-
         </div>
+        <script src="../assets/js/form-validation.js"></script>
     </body>
 </html>

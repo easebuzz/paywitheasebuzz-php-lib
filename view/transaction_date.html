@@ -4,9 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <!--CSS file for date picker -->
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-        <!-- Css file for html -->
         <link rel="stylesheet" href="../assets/css/style.css">
         <title>Transaction Date API</title>
     </head>
@@ -15,10 +13,9 @@
             <header class="wrapper">
                 <div class="logo">
                     <a href="../index.html">
-                        <img src="../assets/images/eb-logo.svg" alt="Easebuzz">
+                        <img src="../assets/images/Easebuzz_Logo_ White_Text.svg" alt="Easebuzz">
                     </a>
                 </div>
-
                 <div class="hedding">
                     <h2><a class="highlight" href="../index.html">Back</a></h2>
                 </div>
@@ -26,7 +23,10 @@
         </div>
         
         <div class="form-container">
-            <h2>TRANSACTION DATE API</h2>
+                <h2><a href="https://docs.easebuzz.in/docs/payment-gateway/xl5wyz91ugbpg-transaction-api-by-date-range"
+                    target="_blank" style="color:#000;text-decoration:none;"
+                    onmouseover="this.style.textDecoration='underline'"
+                    onmouseout="this.style.textDecoration='none'">TRANSACTION DATE API &#x2197;</a></h2>
             <hr>
             <form method="POST" action="../easebuzz.php?api_name=transaction_date">
                 <div class="main-form">
@@ -35,16 +35,17 @@
                     <div class="mandatory-data">
                         <div class="form-field">
                             <label for="merchant_email">Merchant Email ID<sup>*</sup></label>
-                            <input id="merchant_email" class="merchant_email" name="merchant_email" value=""
-                            placeholder="date.transaction@easebuzz.in">
+                            <input id="merchant_email" name="merchant_email" placeholder="date.transaction@easebuzz.in" required pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}">
                         </div>
         
                         <div class="form-field">
-                            <label for="transaction_date">Transaction Date<sup>*</sup></label>
-                            <input id="transaction_date" class="transaction_date" name="transaction_date" value="" placeholder="DD-MM-YYYY">
-                        </div>         
-                        
-                        <!--<input type="hidden" name="api_name" value="transaction_date_api"> -->
+                            <label for="start_date">Start Date<sup>*</sup></label>
+                            <input id="start_date" name="start_date" placeholder="DD-MM-YYYY" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="end_date">End Date<sup>*</sup></label>
+                            <input id="end_date" name="end_date" placeholder="DD-MM-YYYY" required>
+                        </div>
                     </div>
                     
                     <div class="btn-submit">
@@ -54,9 +55,9 @@
             </form>
         </div>
 
-        <!-- import javascript file -->  
         <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
         <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
         <script src="../assets/js/custom_javascript.js"></script>
+        <script src="../assets/js/form-validation.js"></script>
     </body>
 </html>

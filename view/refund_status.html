@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="../assets/css/style.css">
+        <title>Refund Status API</title>
+    </head>
+    <body>
+        <div class="grid-container">
+            <header class="wrapper">
+                <div class="logo">
+                    <a href="../index.html">
+                        <img src="../assets/images/Easebuzz_Logo_ White_Text.svg" alt="Easebuzz">
+                    </a>
+                </div>
+                <div class="hedding">
+                    <h2><a class="highlight" href="../index.html">Back</a></h2>
+                </div>
+            </header>
+
+            <div class="form-container">
+                 <h2><a href="https://docs.easebuzz.in/docs/payment-gateway/de78eba8de53c-refund-status-api"
+                target="_blank" style="color:#000;text-decoration:none;"
+                onmouseover="this.style.textDecoration='underline'"
+                onmouseout="this.style.textDecoration='none'">REFUND STATUS API &#x2197;</a></h2>
+                <hr>
+                <form method="POST" action="../easebuzz.php?api_name=refund_status">
+                    <div class="main-form">
+                        <h3>Mandatory Parameters</h3>
+                        <hr>
+                        <div class="mandatory-data">
+                            <div class="form-field">
+                                <label for="easebuzz_id">Easebuzz ID<sup>*</sup></label>
+                                <input id="easebuzz_id" name="easebuzz_id" placeholder="E2308172536" required>
+                            </div>
+                        </div>
+
+                        <h3>Optional Parameters</h3>
+                        <hr>
+                        <div class="optional-data">
+                            <div class="form-field">
+                                <label for="merchant_refund_id">Merchant Refund ID</label>
+                                <input id="merchant_refund_id" name="merchant_refund_id" placeholder="REF001"
+                                    pattern="^[a-zA-Z0-9_\-]*$"
+                                    title="Only alphanumeric, _ and - allowed.">
+                            </div>
+                        </div>
+
+                        <div class="btn-submit">
+                            <button type="submit">SUBMIT</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script src="../assets/js/form-validation.js"></script>
+    </body>
+</html>

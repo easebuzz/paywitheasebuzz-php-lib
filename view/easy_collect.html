@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <title>Initiate Payment API</title>
+    <title>Easy Collect API</title>
     <style>
         .toggle-container {
             display: flex;
@@ -63,6 +63,25 @@
         input:checked+.slider:before {
             transform: translateX(24px);
         }
+
+        .checkbox-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            padding: 5px 0;
+        }
+
+        .checkbox-group label {
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            min-width: auto;
+        }
     </style>
 </head>
 
@@ -81,7 +100,7 @@
                             <span class="toggle-label">Auto Fill Data</span>
                             <label class="switch">
                                 <input type="checkbox" id="autoFillToggle">
-                                <span class="slider" id="autoFillSlider"></span>
+                                <span class="slider"></span>
                             </label>
                         </span>
                     </span>
@@ -91,21 +110,28 @@
         </header>
 
         <div class="form-container">
-            <h2><a href="https://docs.easebuzz.in/docs/payment-gateway/8ec545c331e6f-initiate-payment-api"
+            <h2><a href="https://docs.easebuzz.in/docs/payment-gateway/xnp0bvcy0ywmn-easy-collect"
                     target="_blank" style="color:#000;text-decoration:none;"
                     onmouseover="this.style.textDecoration='underline'"
-                    onmouseout="this.style.textDecoration='none'">INITIATE PAYMENT API &#x2197;</a></h2>
+                    onmouseout="this.style.textDecoration='none'">EASY COLLECT API &#x2197;</a></h2>
             <hr>
-            <form name="initiatePaymentForm" method="POST" action="../easebuzz.php?api_name=initiate_payment">
+            <form name="easyCollectForm" method="POST" action="../easebuzz.php?api_name=easy_collect">
                 <div class="main-form">
                     <h3>Mandatory Parameters</h3>
                     <hr>
                     <div class="mandatory-data">
                         <div class="form-field">
-                            <label for="txnid">Transaction ID<sup>*</sup></label>
-                            <input id="txnid" name="txnid" placeholder="T31Q6JT8HB" required
-                                pattern="^[a-zA-Z0-9_|\-/]{1,40}$"
-                                title="Only alphanumeric, _, |, -, / allowed. Max 40 chars.">
+                            <label for="name">Customer Name<sup>*</sup></label>
+                            <input id="name" name="name" placeholder="John Doe" required
+                                pattern="^[a-zA-Z0-9&amp;'\-._ ()/,@]{1,150}$"
+                                title="Only alphanumeric and &amp;'-._()/,@ allowed. Max 150 chars.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="phone">Phone<sup>*</sup></label>
+                            <input id="phone" name="phone" placeholder="9876543210" required
+                                pattern="^(\+\d{1,4}[-]?)?\d{5,20}$"
+                                title="Valid phone number. 5-20 digits, optional country code.">
                         </div>
 
                         <div class="form-field">
@@ -113,85 +139,35 @@
                             <input id="amount" name="amount" placeholder="125.25" required
                                 title="Amount must be a number with decimal (e.g., 125.0). Must be >= 1.">
                         </div>
-
-                        <div class="form-field">
-                            <label for="firstname">First Name<sup>*</sup></label>
-                            <input id="firstname" name="firstname" placeholder="Easebuzz Pvt. Ltd." required
-                                pattern="^[a-zA-Z0-9&amp;'\-._ ()/,@]{1,150}$"
-                                title="Only alphanumeric and &amp;'-._()/,@ allowed. Max 150 chars.">
-                        </div>
-
-                        <div class="form-field">
-                            <label for="email">Email ID<sup>*</sup></label>
-                            <input id="email" name="email" type="email" placeholder="initiate.payment@easebuzz.in"
-                                required title="Enter a valid email address.">
-                        </div>
-
-                        <div class="form-field">
-                            <label for="phone">Phone<sup>*</sup></label>
-                            <input id="phone" name="phone" placeholder="0123456789" required
-                                pattern="^(\+\d{1,4}[-]?)?\d{5,20}$"
-                                title="Valid phone number. 5-20 digits, optional country code.">
-                        </div>
-
-                        <div class="form-field">
-                            <label for="productinfo">Product Information<sup>*</sup></label>
-                            <input id="productinfo" name="productinfo" placeholder="Apple Laptop" required
-                                pattern="^[a-zA-Z0-9\-\s|\-]{1,45}$"
-                                title="Only alphanumeric, spaces, - and | allowed. Max 45 chars.">
-                        </div>
-
-                        <div class="form-field">
-                            <label for="surl">Success URL<sup>*</sup></label>
-                            <input id="surl" name="surl" value="" placeholder="http://localhost:3000/response.php"
-                                required pattern="^https?://.*"
-                                title="Enter a valid URL starting with http:// or https://">
-                        </div>
-
-                        <div class="form-field">
-                            <label for="furl">Failure URL<sup>*</sup></label>
-                            <input id="furl" name="furl" value="" placeholder="http://localhost:3000/response.php"
-                                required pattern="^https?://.*"
-                                title="Enter a valid URL starting with http:// or https://">
-                        </div>
                     </div>
 
                     <h3>Optional Parameters</h3>
                     <hr>
 
-                    <h4 style="color:#555;margin-top:15px;">Address Details</h4>
+                    <h4 style="color:#555;margin-top:15px;">Link Details</h4>
                     <div class="optional-data">
                         <div class="form-field">
-                            <label for="address1">Address 1</label>
-                            <input id="address1" name="address1" placeholder="#250, Main 5th cross,"
-                                pattern="^[a-zA-Z.0-9/,\s_#@()&amp;|:\-]{1,100}$">
+                            <label for="email">Email ID</label>
+                            <input id="email" name="email" type="email" placeholder="customer@example.com"
+                                title="Enter a valid email address.">
                         </div>
 
                         <div class="form-field">
-                            <label for="address2">Address 2</label>
-                            <input id="address2" name="address2" placeholder="Saket nagar, Pune"
-                                pattern="^[a-zA-Z.0-9/,\s_#@()&amp;|:\-]{1,100}$">
+                            <label for="merchant_txn">Merchant Transaction ID</label>
+                            <input id="merchant_txn" name="merchant_txn" placeholder="ECTEST001"
+                                pattern="^[a-zA-Z0-9_|\-/]{1,40}$"
+                                title="Only alphanumeric, _, |, -, / allowed. Max 40 chars.">
                         </div>
 
                         <div class="form-field">
-                            <label for="city">City</label>
-                            <input id="city" name="city" placeholder="Pune" pattern="^[0-9a-zA-Z_.\s\-]{1,50}$">
+                            <label for="message">Message</label>
+                            <input id="message" name="message" placeholder="Payment for order #123">
                         </div>
 
                         <div class="form-field">
-                            <label for="state">State</label>
-                            <input id="state" name="state" placeholder="Maharashtra"
-                                pattern="^[0-9a-zA-Z_.\s\-]{1,50}$">
-                        </div>
-
-                        <div class="form-field">
-                            <label for="country">Country</label>
-                            <input id="country" name="country" placeholder="India" pattern="^[0-9a-zA-Z_.\s\-]{1,50}$">
-                        </div>
-
-                        <div class="form-field">
-                            <label for="zipcode">Zip-Code</label>
-                            <input id="zipcode" name="zipcode" placeholder="123456" pattern="^[0-9]{0,6}$">
+                            <label for="expiry_date">Expiry Date</label>
+                            <input id="expiry_date" name="expiry_date"
+                                placeholder="DD-MM-YYYY or DD-MM-YYYY HH:MM:SS AM/PM">
                         </div>
                     </div>
 
@@ -231,56 +207,37 @@
                                 pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
                                 title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
                         </div>
-
-                        <div class="form-field">
-                            <label for="udf6">UDF6</label>
-                            <input id="udf6" name="udf6" placeholder="User description6"
-                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
-                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
-                        </div>
-
-                        <div class="form-field">
-                            <label for="udf7">UDF7</label>
-                            <input id="udf7" name="udf7" placeholder="User description7"
-                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
-                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
-                        </div>
                     </div>
 
+                    <h4 style="color:#555;margin-top:15px;">Operation (Notification Channels)</h4>
+                    <div class="optional-data">
+                        <div class="form-field">
+                            <label>Send Notification Via:</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="op_sms"> SMS</label>
+                                <label><input type="checkbox" name="op_email"> Email</label>
+                                <label><input type="checkbox" name="op_whatsapp"> WhatsApp</label>
+                            </div>
+                        </div>
+                    </div>
 
                     <h4 style="color:#555;margin-top:15px;">General</h4>
                     <div class="optional-data">
                         <div class="form-field">
-                            <label for="payment_category">Payment Category</label>
-                            <input id="payment_category" name="payment_category" placeholder="TPV">
+                            <label for="update">Update Link</label>
+                            <input id="update" name="update" placeholder="true">
                         </div>
 
                         <div class="form-field">
-                            <label for="account_no">Account No.</label>
-                            <input id="account_no" name="account_no" placeholder="0000000000000000">
+                            <label for="accept_partial_payment">Accept Partial Payment</label>
+                            <input id="accept_partial_payment" name="accept_partial_payment"
+                                placeholder="true">
                         </div>
 
                         <div class="form-field">
-                            <label for="ifsc">IFSC</label>
-                            <input id="ifsc" name="ifsc" placeholder="IFSCCODE">
-                        </div>
-
-                        <div class="form-field">
-                            <label for="sub_merchant_id">Sub-Merchant ID</label>
-                            <input id="sub_merchant_id" name="sub_merchant_id" placeholder="S123ABC"
-                                pattern="^[a-zA-Z0-9\-]{0,15}$">
-                        </div>
-
-                        <div class="form-field">
-                            <label for="unique_id">Unique ID</label>
-                            <input id="unique_id" name="unique_id" placeholder="Customer unique Id"
-                                pattern="^[a-zA-Z0-9_]{0,40}$">
-                        </div>
-
-                        <div class="form-field">
-                            <label for="show_payment_mode">Show Payment Mode</label>
-                            <input id="show_payment_mode" name="show_payment_mode"
-                                placeholder="NB,DC,CC,MW,UPI,OM,EMI,CBT,BT">
+                            <label for="split_percentage">Split Percentage</label>
+                            <input id="split_percentage" name="split_percentage"
+                                placeholder='{"label_of_bank1": 60, "label_of_bank2": 40}'>
                         </div>
 
                         <div class="form-field">
@@ -288,7 +245,14 @@
                             <input id="split_payments" name="split_payments"
                                 placeholder='{"label_of_bank1": 60, "label_of_bank2": 40}'>
                         </div>
+
+                        <div class="form-field">
+                            <label for="sub_merchant_id">Sub-Merchant ID</label>
+                            <input id="sub_merchant_id" name="sub_merchant_id" placeholder="S123ABC"
+                                pattern="^[a-zA-Z0-9\-]{0,15}$">
+                        </div>
                     </div>
+
                     <div class="btn-submit">
                         <button type="submit">SUBMIT</button>
                     </div>
@@ -299,20 +263,24 @@
     <script src="../assets/js/form-validation.js"></script>
     <script>
         document.getElementById('autoFillToggle').addEventListener('change', function () {
-            var form = document.forms['initiatePaymentForm'];
+            var form = document.forms['easyCollectForm'];
             if (this.checked) {
-                form.txnid.value = 'TXN' + Math.random().toString(36).substring(2, 10).toUpperCase();
-                form.amount.value = '125.50';
-                form.firstname.value = 'John Doe';
-                form.email.value = 'test@example.com';
+                form.name.value = 'John Doe';
                 form.phone.value = '9876543210';
-                form.productinfo.value = 'Test Product';
-                form.surl.value = 'http://localhost:3000/response.php';
-                form.furl.value = 'http://localhost:3000/response.php';
+                form.amount.value = '100.00';
+                form.email.value = 'test@example.com';
+                form.merchant_txn.value = 'EC' + Math.random().toString(36).substring(2, 10).toUpperCase();
+                form.message.value = 'Payment link for order';
             } else {
-                var inputs = form.querySelectorAll('input');
+                var inputs = form.querySelectorAll('input:not([type="checkbox"])');
                 for (var i = 0; i < inputs.length; i++) {
                     inputs[i].value = '';
+                }
+                var checkboxes = form.querySelectorAll('input[type="checkbox"]');
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (checkboxes[i].id !== 'autoFillToggle') {
+                        checkboxes[i].checked = false;
+                    }
                 }
             }
         });

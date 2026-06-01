@@ -1,215 +1,415 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="stylesheet" href="../assets/css/style.css">
-        <title>Initiate Payment API (iframe) </title>
-    </head>
-    <body>
-        <div class="grid-container">
-            <header class="wrapper">
-                <div class="logo">
-                    <a href="../index.html">
-                        <img src="../assets/images/eb-logo.svg" alt="Easebuzz">
-                    </a>
-                </div>
 
-                <div class="hedding">
-                    <h2><a class="highlight" href="../index.html">Back</a></h2>
-                </div>
-            </header>
-            <form>
-            <div id='loading1'></div>
-            <div class="form-container">
-                <h2>INITIATE PAYMENT API (iframe)</h2>
-                <hr>
-                    <div class="main-form">
-                        <h3>Mandatory Parameters</h3>
-                        <hr>
-                        <div class="mandatory-data">
-                            <div class="form-field">
-                                <label for="txnid">Transaction ID<sup>*</sup></label>
-                                <input id="txnid" class="txnid" name="txnid" value="" placeholder="T31Q6JT8HB">
-                            </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <title>Initiate Payment API (iframe)</title>
+    <style>
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-                            <div class="form-field">
-                                <label for="amount">Amount<sup>(should be float)*</sup></label>
-                                <input id="amount" class="amount" name="amount" value="" placeholder="125.25">
-                            </div>  
+        .toggle-label {
+            color: #000;
+            font-size: 0.9em;
+        }
 
-                            <div class="form-field">
-                                <label for="firstname">First Name<sup>*</sup></label>
-                                <input id="firstname" class="firstname" name="firstname" value="" placeholder="Easebuzz Pvt. Ltd.">
-                            </div>
-                    
-                            <div class="form-field">
-                                <label for="email">Email ID<sup>*</sup></label>
-                                <input id="email" class="email" name="email" value=""
-                                placeholder="initiate.payment@easebuzz.in">
-                            </div>
-                    
-                            <div class="form-field">
-                                <label for="phone">Phone<sup>*</sup></label>
-                                <input id="phone" class="phone" name="phone" value=""
-                                placeholder="0123456789">
-                            </div>
-                            
-                            <div class="form-field">
-                                <label for="productinfo">Product Information<sup>*</sup></label>
-                                <input id="productinfo" class="productinfo" name="productinfo" value="" placeholder="Apple Laptop">
-                            </div>
-                    
-                            <div class="form-field">
-                                <label for="surl">Success URL<sup>*</sup></label>
-                                <input id="surl" class="surl" name="surl" value="http://localhost:3000/response.php" placeholder="http://localhost:3000/response.php">
-                            </div>
-                            
-                            <div class="form-field">
-                                <label for="furl">Failure URL<sup>*</sup></label>
-                                <input id="furl" class="furl" name="furl" value="http://localhost:3000/response.php"
-                                placeholder="http://localhost:3000/response.php">
-                            </div>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
 
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 26px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #4CAF50;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(24px);
+        }
+
+        #loading1 {
+            padding: 10px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            display: none;
+            max-width: 900px;
+            margin: 10px auto;
+            overflow: hidden;
+        }
+
+        #loading1 pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            margin: 0;
+            max-width: 100%;
+        }
+
+        #loading1.success-block {
+            display: block;
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        #loading1.failure-block {
+            display: block;
+            background: #ffebee;
+            border: 1px solid #f44336;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid-container">
+        <header class="wrapper">
+            <div class="logo">
+                <a href="../index.html">
+                    <img src="../assets/images/Easebuzz_Logo_ White_Text.svg" alt="Easebuzz">
+                </a>
+            </div>
+            <div class="hedding">
+                <h2>
+                    <span style="margin-right:20px;">
+                        <span class="toggle-container" style="display:inline-flex;">
+                            <span class="toggle-label">Auto Fill Data</span>
+                            <label class="switch">
+                                <input type="checkbox" id="autoFillToggle">
+                                <span class="slider"></span>
+                            </label>
+                        </span>
+                    </span>
+                    <a class="highlight" href="../index.html">Back</a>
+                </h2>
+            </div>
+        </header>
+
+        <div id="loading1"></div>
+        <div class="form-container">
+            <h2><a href="https://docs.easebuzz.in/docs/payment-gateway/8ec545c331e6f-initiate-payment-api"
+                    target="_blank" style="color:#000;text-decoration:none;"
+                    onmouseover="this.style.textDecoration='underline'"
+                    onmouseout="this.style.textDecoration='none'">INITIATE PAYMENT API (IFRAME) &#x2197;</a></h2>
+            <hr>
+            <form name="iframePaymentForm" id="iframePaymentForm">
+                <div class="main-form">
+                    <h3>Mandatory Parameters</h3>
+                    <hr>
+                    <div class="mandatory-data">
+                        <div class="form-field">
+                            <label for="txnid">Transaction ID<sup>*</sup></label>
+                            <input id="txnid" name="txnid" placeholder="T31Q6JT8HB" required
+                                pattern="^[a-zA-Z0-9_|\-/]{1,40}$"
+                                title="Only alphanumeric, _, |, -, / allowed. Max 40 chars.">
                         </div>
 
-                        <h3>Optional Parameters</h3>
-                        <hr>
-                        <div class="optional-data">
-
-                            <div class="form-field">
-                                <label for="udf1">UDF1</label>
-                                <input id="udf1" class="udf1" name="udf1" value="" placeholder="User description1">
-                            </div>
-                        
-                            <div class="form-field">
-                                <label for="udf2">UDF2</label>
-                                <input id="udf2" class="udf2" name="udf2" value="" placeholder="User description2">
-                            </div>
-                    
-                            <div class="form-field">
-                                <label for="udf3">UDF3</label>
-                                <input id="udf3" class="udf3" name="udf3" value="" placeholder="User description3">
-                            </div>
-                    
-                            <div class="form-field">
-                                <label for="udf4">UDF4</label>
-                                <input id="udf4" class="udf4" name="udf4" value="" placeholder="User description4">
-                            </div>
-                    
-                            <div class="form-field">
-                                <label for="udf5">UDF5</label>
-                                <input id="udf5" class="udf5" name="udf5" value="" placeholder="User description5">
-                            </div>
-                            
-                            <div class="form-field">
-                                <label for="address1">Address 1</label>
-                                <input id="address1" class="address1" name="address1" value="" 
-                                placeholder="#250, Main 5th cross,">
-                            </div>
-                    
-                            <div class="form-field">
-                                <label for="address2">Address 2</label>
-                                <input id="address2" class="address2" name="address2" value="" 
-                                placeholder="Saket nagar, Pune">
-                            </div>
-                            
-                            <div class="form-field">
-                                <label for="city">City</label>
-                                <input id="city" class="city" name="city" value="" placeholder="Pune">
-                            </div>
-                    
-                            <div class="form-field">
-                                <label for="state">State</label>
-                                <input id="state" class="state" name="state" value="" placeholder="Maharashtra">
-                            </div>
-                    
-                            <div class="form-field">
-                                <label for="country">Country</label>
-                                <input id="country" class="country" name="country" value="" placeholder="India">
-                            </div>
-                            
-                            <div class="form-field">
-                                <label for="zipcode">Zip-Code</label>
-                                <input id="zipcode" class="zipcode" name="zipcode" value="" placeholder="123456">
-                            </div>
-
-                               <!-- <div class="form-field">
-                                <label for="sub_merchant_id">Sub-Merchant ID</label>
-                                <input id="sub_merchant_id" class="sub_merchant_id" name="sub_merchant_id" value="" placeholder="123456">
-                            </div>
-
-                             <div class="form-field">
-                                <label for="unique_id">Unique Id</label>
-                                <input id="unique_id" class="unique_id" name="unique_id" value="" placeholder="Customer unique Id">
-                            </div>
-
-                             <div class="form-field">
-                                <label for="split_payments">Split payment</label>
-                                <input id="split_payments" class="split_payments" name="split_payments" value="" placeholder='{ "axisaccount" : 100, "hdfcaccount" : 100}'>
-                            </div> 
-
-                              <div class="form-field">
-                                <label for="show_payment_mode">Show Payment Mode</label>
-                                <input id="show_payment_mode" class="show_payment_mode" name="show_payment_mode" value="" placeholder='NB,DC,CC,Debit+ATM Pin,MW,UPI,OM,EMI'>
-                            </div> -->
-
-
+                        <div class="form-field">
+                            <label for="amount">Amount<sup>(should be float)*</sup></label>
+                            <input id="amount" name="amount" placeholder="125.25" required
+                                title="Amount must be a number with decimal (e.g., 125.0). Must be >= 1.">
                         </div>
-                
-                        <div class="btn-submit">
-                            <button type="button" onclick='onclick_iframe()' >SUBMIT</button>
+
+                        <div class="form-field">
+                            <label for="firstname">First Name<sup>*</sup></label>
+                            <input id="firstname" name="firstname" placeholder="Easebuzz Pvt. Ltd." required
+                                pattern="^[a-zA-Z0-9&amp;'\-._ ()/,@]{1,150}$"
+                                title="Only alphanumeric and &amp;'-._()/,@ allowed. Max 150 chars.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="email">Email ID<sup>*</sup></label>
+                            <input id="email" name="email" type="email" placeholder="initiate.payment@easebuzz.in"
+                                required title="Enter a valid email address.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="phone">Phone<sup>*</sup></label>
+                            <input id="phone" name="phone" placeholder="0123456789" required
+                                pattern="^(\+\d{1,4}[-]?)?\d{5,20}$"
+                                title="Valid phone number. 5-20 digits, optional country code.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="productinfo">Product Information<sup>*</sup></label>
+                            <input id="productinfo" name="productinfo" placeholder="Apple Laptop" required
+                                pattern="^[a-zA-Z0-9\-\s|\-]{1,45}$"
+                                title="Only alphanumeric, spaces, - and | allowed. Max 45 chars.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="surl">Success URL<sup>*</sup></label>
+                            <input id="surl" name="surl" value="" placeholder="http://localhost:3000/response.php"
+                                required pattern="^https?://.*"
+                                title="Enter a valid URL starting with http:// or https://">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="furl">Failure URL<sup>*</sup></label>
+                            <input id="furl" name="furl" value="" placeholder="http://localhost:3000/response.php"
+                                required pattern="^https?://.*"
+                                title="Enter a valid URL starting with http:// or https://">
                         </div>
                     </div>
-            </div>
-           </form> 
+
+                    <h3>Optional Parameters</h3>
+                    <hr>
+
+                    <h4 style="color:#555;margin-top:15px;">Address Details</h4>
+                    <div class="optional-data">
+                        <div class="form-field">
+                            <label for="address1">Address 1</label>
+                            <input id="address1" name="address1" placeholder="#250, Main 5th cross,"
+                                pattern="^[a-zA-Z.0-9/,\s_#@()&amp;|:\-]{1,100}$">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="address2">Address 2</label>
+                            <input id="address2" name="address2" placeholder="Saket nagar, Pune"
+                                pattern="^[a-zA-Z.0-9/,\s_#@()&amp;|:\-]{1,100}$">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="city">City</label>
+                            <input id="city" name="city" placeholder="Pune" pattern="^[0-9a-zA-Z_.\s\-]{1,50}$">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="state">State</label>
+                            <input id="state" name="state" placeholder="Maharashtra"
+                                pattern="^[0-9a-zA-Z_.\s\-]{1,50}$">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="country">Country</label>
+                            <input id="country" name="country" placeholder="India"
+                                pattern="^[0-9a-zA-Z_.\s\-]{1,50}$">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="zipcode">Zip-Code</label>
+                            <input id="zipcode" name="zipcode" placeholder="123456" pattern="^[0-9]{0,6}$">
+                        </div>
+                    </div>
+
+                    <h4 style="color:#555;margin-top:15px;">UDF (User Defined Fields)</h4>
+                    <div class="optional-data">
+                        <div class="form-field">
+                            <label for="udf1">UDF1</label>
+                            <input id="udf1" name="udf1" placeholder="User description1"
+                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
+                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="udf2">UDF2</label>
+                            <input id="udf2" name="udf2" placeholder="User description2"
+                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
+                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="udf3">UDF3</label>
+                            <input id="udf3" name="udf3" placeholder="User description3"
+                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
+                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="udf4">UDF4</label>
+                            <input id="udf4" name="udf4" placeholder="User description4"
+                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
+                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="udf5">UDF5</label>
+                            <input id="udf5" name="udf5" placeholder="User description5"
+                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
+                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="udf6">UDF6</label>
+                            <input id="udf6" name="udf6" placeholder="User description6"
+                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
+                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="udf7">UDF7</label>
+                            <input id="udf7" name="udf7" placeholder="User description7"
+                                pattern="^[a-zA-Z.0-9/\\,\s_#@\-=+&amp;]{1,300}$"
+                                title="Only alphanumeric and ./,_#@-=+&amp; allowed. Max 300 chars.">
+                        </div>
+                    </div>
+
+                    <h4 style="color:#555;margin-top:15px;">General</h4>
+                    <div class="optional-data">
+                        <div class="form-field">
+                            <label for="sub_merchant_id">Sub-Merchant ID</label>
+                            <input id="sub_merchant_id" name="sub_merchant_id" placeholder="S123ABC"
+                                pattern="^[a-zA-Z0-9\-]{0,15}$">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="unique_id">Unique ID</label>
+                            <input id="unique_id" name="unique_id" placeholder="Customer unique Id"
+                                pattern="^[a-zA-Z0-9_]{0,40}$">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="show_payment_mode">Show Payment Mode</label>
+                            <input id="show_payment_mode" name="show_payment_mode"
+                                placeholder="NB,DC,CC,MW,UPI,OM,EMI,CBT,BT">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="split_payments">Split Payments</label>
+                            <input id="split_payments" name="split_payments"
+                                placeholder='{"label_of_bank1": 60, "label_of_bank2": 40}'>
+                        </div>
+                    </div>
+
+                    <div class="btn-submit">
+                        <button type="submit">SUBMIT</button>
+                    </div>
+                </div>
+            </form>
         </div>
-      
-    </body>
+    </div>
 
-<script src='https://ebz-static.s3.ap-south-1.amazonaws.com/easecheckout/easebuzz-checkout.js'></script>
-<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script> 
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="https://ebz-static.s3.ap-south-1.amazonaws.com/easecheckout/v2.0.0/easebuzz-checkout-v2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="../assets/js/form-validation.js"></script>
     <script>
+        // Form submit with validation
+        document.getElementById('iframePaymentForm').addEventListener('submit', function (e) {
+            e.preventDefault();
 
-    function onclick_iframe() {
-
-  $.ajax({
-            type: 'POST',
-            url: '../easebuzz.php?api_name=initiate_payment_iframe', 
-            data: $('form').serialize(),
-            success: function (response) {
-                var json_response = JSON.parse(response);
-
-                if (json_response['status']==1){
-                    var easebuzzCheckout = new EasebuzzCheckout(json_response['key'],"prod")
-                    var options = {
-                        access_key: json_response['access_key'] , // access key received via Initiate Payment
-                        onResponse: (response_data) => {
-                        document.getElementById('loading1').innerText=JSON.stringify(response_data);
-                        console.log(response_data);
-                        },
-                        theme: '#123456' // color hex
-                        }
-                        easebuzzCheckout.initiatePayment(options);
-                }
-                else {loading
-                    document.getElementById('loading1').innerText=JSON.stringify(json_response);
-                    alert(JSON.stringify(json_response));
-                } 
-                
-            
+            if (!this.checkValidity()) {
+                this.reportValidity();
+                return;
             }
 
+            $.ajax({
+                type: 'POST',
+                url: '../easebuzz.php?api_name=initiate_payment_iframe',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function (json_response) {
+                    if (typeof json_response === 'string') {
+                        json_response = JSON.parse(json_response);
+                    }
 
+                    var data = json_response['data'] || json_response;
+                    var env = data['env'] || 'test';
 
+                    if (json_response['status'] == 1) {
+                        var easebuzzCheckout = new EasebuzzCheckout(data['key'], env);
+                        var options = {
+                            access_key: data['access_key'],
+                            onResponse: function (response_data) {
+                                console.log(response_data);
+                                var loadingEl = document.getElementById('loading1');
+                                loadingEl.className = '';
+                                var pre = document.createElement('pre');
+                                pre.textContent = JSON.stringify(response_data, null, 2);
+                                if (response_data.status === 'success') {
+                                    loadingEl.classList.add('success-block');
+                                    loadingEl.innerHTML = '<h3>Success</h3>';
+                                } else {
+                                    loadingEl.classList.add('failure-block');
+                                    loadingEl.innerHTML = '<h3>Failure</h3>';
+                                }
+                                loadingEl.appendChild(pre);
+                                resetForm();
+                            },
+                            theme: '#123456'
+                        };
+                        easebuzzCheckout.initiatePayment(options);
+                    } else {
+                        var loadingEl = document.getElementById('loading1');
+                        loadingEl.className = 'failure-block';
+                        loadingEl.innerHTML = '<h3>Error</h3>';
+                        var pre = document.createElement('pre');
+                        pre.textContent = JSON.stringify(json_response, null, 2);
+                        loadingEl.appendChild(pre);
+                        resetForm();
+                    }
+                },
+                error: function () {
+                    alert('Request failed. Please try again.');
+                }
+            });
+        });
 
+        // Auto Fill Toggle
+        document.getElementById('autoFillToggle').addEventListener('change', function () {
+            var form = document.forms['iframePaymentForm'];
+            if (this.checked) {
+                form.txnid.value = 'TXN' + Math.random().toString(36).substring(2, 10).toUpperCase();
+                form.amount.value = '125.50';
+                form.firstname.value = 'John Doe';
+                form.email.value = 'test@example.com';
+                form.phone.value = '9876543210';
+                form.productinfo.value = 'Test Product';
+                form.surl.value = 'http://localhost:3000/response.php';
+                form.furl.value = 'http://localhost:3000/response.php';
+            } else {
+                var inputs = form.querySelectorAll('input');
+                for (var i = 0; i < inputs.length; i++) {
+                    inputs[i].value = '';
+                }
+            }
+        });
 
-          });
-          
-    }
+        function resetForm() {
+            var form = document.forms['iframePaymentForm'];
+            form.reset();
+            document.getElementById('autoFillToggle').checked = false;
+        }
     </script>
+</body>
 
-
-    </html>
+</html>

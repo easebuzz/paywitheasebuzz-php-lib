@@ -13,35 +13,33 @@ body *{
     background-color: #fff;
     margin:0px;
     padding:0px;
+   
+    
 }
 
 header{
     display: grid;
     grid-template-columns: 35% 65% auto;
-    padding: 8px 25px 0px 25px;
-    background-color:#07275d; 
+    padding: 18px 25px 0px 25px;
+    /* background-color:#07275d;  */
     border: 1px solid;
     border-radius:2px;
 }
 
-.logo{
-    padding:2px;
-}
-
 img{
-    max-width:150px;
+    width:170px;
     text-align: left;
 } 
 
 .hedding{
-    color:white;
+    color:black;
     text-align: right;
 }
 
 .hedding > a > h2{
     font-size:1.2em;
     margin-top:10px !important;
-    color: #fff;
+    color: #000;
 }
 
 .hedding > a > h2 > spam{
@@ -101,7 +99,7 @@ ul > li{
 }
 
 .highlight{
-    color:#fff;
+    color:#000;
 }
 
 .form-container{
